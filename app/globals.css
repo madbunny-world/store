@@ -1,26 +1,50 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  MADBUNNY brand tokens — Brand Deck v2 (2026). The only palette.
+  The older #FF0037 / #ECECEC / #2C2C2C palette is superseded — do not use.
+  Page background is pure #FFFFFF (Gia's v1 feedback, 2026-07 — overrides the
+  deck's "never pure white" note for backgrounds). Card wells are --color-card.
+*/
+@theme {
+  --color-black: #151312;
+  --color-mad-red: #ff402b;
+  --color-bunny-white: #fff8f8;
+  --color-gun-metal: #4d5257;
+  --color-bunny-pink: #ffbfb4;
+  --color-card: #f4f4f4;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  /* Geist Mono is wired via next/font in layout.tsx (self-hosted). */
   --font-mono: var(--font-geist-mono);
+  /* Bebas Neue (home location / clock / enter texts). */
+  --font-bebas: var(--font-bebas-neue);
+  /* Body copy: Helvetica Neue system stack. */
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Blinking clock colon — crisp on/off once per second (added liveliness). */
+@keyframes clock-blink {
+  50% {
+    opacity: 0;
+  }
+}
+.animate-clock-blink {
+  animation: clock-blink 1s step-end infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-clock-blink {
+    animation: none;
   }
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-black);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
