@@ -24,13 +24,15 @@ export default function Home() {
         </div>
       </div>
 
-      <Link href="/collectibles" aria-label="Enter the shop">
+      <Link href="/collectibles" aria-label="Enter the shop" className="peer">
         <HeroBunny className="w-[60vw] max-w-[440px]" />
       </Link>
 
+      {/* Gray at rest; blinks black while the plate is hovered (peer). Direct
+          hover on the text itself just goes solid black. */}
       <Link
         href="/collectibles"
-        className="order-3 mt-8 font-bebas text-xl uppercase tracking-normal transition-opacity hover:opacity-60 sm:order-none"
+        className="order-3 mt-8 font-bebas text-xl uppercase tracking-normal text-gun-metal transition-colors hover:text-black peer-hover:animate-enter-blink peer-hover:text-black motion-reduce:animate-none sm:order-none"
       >
         [Click to enter]
       </Link>

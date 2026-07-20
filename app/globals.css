@@ -20,6 +20,10 @@
   --font-bebas: var(--font-bebas-neue);
   /* Body copy: Helvetica Neue system stack. */
   --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* Theme animation token so the blinker composes with variants
+     (peer-hover:animate-enter-blink). Keyframes defined below. */
+  --animate-enter-blink: enter-blink 2.4s linear infinite;
 }
 
 /* Blinking clock colon — crisp on/off once per second (added liveliness). */
@@ -31,6 +35,37 @@
 .animate-clock-blink {
   animation: clock-blink 1s step-end infinite;
 }
+
+/* [CLICK TO ENTER] blinker — cadence measured from Gia's reference recording:
+   ~2.4s cycle of dark hold → stuttering flicker-in (neon catching) → bright
+   hold → smooth fade-out. Hover-only: applied via peer-hover on the plate. */
+@keyframes enter-blink {
+  0%,
+  8% {
+    opacity: 0.2;
+  }
+  10% {
+    opacity: 1;
+  }
+  13% {
+    opacity: 0.25;
+  }
+  17% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0.3;
+  }
+  24%,
+  48% {
+    opacity: 1;
+  }
+  62%,
+  100% {
+    opacity: 0.2;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-clock-blink {
     animation: none;
