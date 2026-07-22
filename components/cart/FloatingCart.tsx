@@ -15,7 +15,7 @@ export default function FloatingCart() {
     <button
       onClick={open}
       aria-label={count > 0 ? `Open cart, ${count} items` : "Open cart"}
-      className="fixed right-4 top-1/2 z-40 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-card text-gun-metal transition-opacity hover:opacity-70"
+      className="fixed right-4 top-1/2 z-[60] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-card text-gun-metal transition-opacity hover:opacity-70"
     >
       {/* bag glyph */}
       <svg

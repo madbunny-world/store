@@ -316,14 +316,14 @@ export default function AboutStory() {
 
         {/* Copy — one per chapter, cross-faded. Lifted on mobile so long
             chapters clear the [scroll down] hint. */}
-        <div className="relative h-40 w-full max-w-2xl px-4 max-sm:-translate-y-[90px]">
+        <div className="relative h-40 w-full max-w-2xl px-4 max-sm:-translate-y-[40px]">
           {CHAPTERS.map((c, i) => (
             <p
               key={c.src}
               ref={(el) => {
                 copyRefs.current[i] = el;
               }}
-              className="absolute inset-x-4 top-0 text-center text-[15px] leading-relaxed text-bunny-white/80"
+              className="absolute inset-x-4 top-0 text-center text-[15px] leading-relaxed text-bunny-white/80 max-sm:text-[12px] max-sm:leading-[20px]"
             >
               {c.copy}
             </p>

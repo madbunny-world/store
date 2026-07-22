@@ -14,14 +14,14 @@ export default function CartDrawer() {
       <div
         aria-hidden={!isOpen}
         onClick={close}
-        className={`fixed inset-0 z-50 bg-black/40 transition-opacity duration-200 ${
+        className={`fixed inset-0 z-[70] bg-black/40 transition-opacity duration-200 ${
           isOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
       {/* Panel */}
       <aside
         aria-label="Cart"
-        className={`fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white transition-transform duration-200 ${
+        className={`fixed inset-y-0 right-0 z-[70] flex w-full max-w-sm flex-col bg-white transition-transform duration-200 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
