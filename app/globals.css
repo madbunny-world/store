@@ -151,50 +151,16 @@ main:not([data-no-float]) {
 .archive-cell:hover .archive-name {
   animation: archive-type 0.3s steps(16, end) 140ms forwards;
 }
-/* Touch devices: no hover — the name is always displayed, and flickers on
-   (short one-shot blink, kin to enter-blink) the first time its cell scrolls
-   into view. ArchiveGrid arms cells with JS (.archive-armed) and marks them
-   .archive-seen via IntersectionObserver; with no JS, names simply stay
-   visible. */
-@keyframes archive-blink-in {
-  0% {
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  35% {
-    opacity: 0.15;
-  }
-  55% {
-    opacity: 1;
-  }
-  70% {
-    opacity: 0.25;
-  }
-  100% {
-    opacity: 1;
-  }
-}
+/* Touch devices: no hover — name is always readable, no typing animation. */
 @media (hover: none) {
   .archive-name {
     clip-path: none;
-  }
-  .archive-cell.archive-armed .archive-name {
-    opacity: 0;
-  }
-  .archive-cell.archive-armed.archive-seen .archive-name {
-    animation: archive-blink-in 0.45s step-end forwards;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .archive-cell:hover .archive-name {
     animation: none;
     clip-path: none;
-  }
-  .archive-cell.archive-armed .archive-name {
-    opacity: 1;
-    animation: none;
   }
 }
 

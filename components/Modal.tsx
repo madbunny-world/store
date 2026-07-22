@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { X } from "lucide-react";
 
 // Wraps intercepted product detail. The content (ProductDetail) stays a Server
 // Component; only this shell is client. Back button / Escape / backdrop close the
@@ -26,10 +25,13 @@ export default function Modal({ children }: { children: React.ReactNode }) {
   }, [router]);
 
   return (
+    // z-30 sits under the sticky header (z-40): the nav stays visible and
+    // clickable above the detail view. No close button — backdrop click /
+    // Escape / any nav link leaves the modal.
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-stretch justify-center sm:items-start sm:overflow-y-auto sm:py-12"
+      className="fixed inset-0 z-30 flex items-stretch justify-center sm:items-start sm:overflow-y-auto sm:py-12"
     >
       {/* Backdrop (desktop) */}
       <div
@@ -39,15 +41,8 @@ export default function Modal({ children }: { children: React.ReactNode }) {
       />
       <div
         ref={panelRef}
-        className="relative z-10 flex w-full flex-col overflow-y-auto bg-white p-5 sm:my-auto sm:h-auto sm:max-w-4xl sm:overflow-visible sm:p-8"
+        className="relative z-10 flex w-full flex-col overflow-y-auto bg-white px-5 pb-5 pt-20 sm:my-auto sm:h-auto sm:max-w-4xl sm:overflow-visible sm:p-8"
       >
-        <button
-          onClick={() => router.back()}
-          aria-label="Close"
-          className="mb-4 self-end hover:opacity-60"
-        >
-          <X className="h-5 w-5" strokeWidth={1.5} />
-        </button>
         {children}
       </div>
     </div>

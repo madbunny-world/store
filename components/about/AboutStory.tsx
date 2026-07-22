@@ -13,64 +13,7 @@ import SplatinkHeading from "@/components/SplatinkHeading";
 // snap + hidden scrollbar come from html.about-fullpage (globals.css), which
 // also flips the whole route to the dark theme.
 
-const CHAPTERS = [
-  {
-    src: "/media/about-1.webp",
-    alt: "Two Madbunny figures, one signed on the feet",
-    copy: (
-      <>
-        Madbunny was founded in 2024 by Korean American designer Gia Kim, who
-        hand-crafted the first Madbunny collectible figures in her small Detroit
-        art studio.
-      </>
-    ),
-  },
-  {
-    src: "/media/about-2.webp",
-    alt: "Sketchbook doodles of the spiky Madbunny character",
-    copy: (
-      <>
-        The character was born from a self-reflective, doodle-like sketch of a
-        spiky bunny, a playful interpretation of how friends and family often
-        described her: cute, curious, and soft on one side, yet bold, wild, and
-        unapologetically fierce on the other. Embracing these seemingly opposite
-        traits,{" "}
-        <strong className="font-semibold text-bunny-white">
-          Madbunny became a symbol of self-exploration, versatility, and fearless
-          self-expression.
-        </strong>
-      </>
-    ),
-  },
-  {
-    src: "/media/about-3.webp",
-    alt: "Collectors with Madbunny figures at a Detroit art event",
-    copy: (
-      <>
-        Madbunny made its debut at a Detroit art fair with a limited collection of
-        collectible figures that quickly sold out. Since 2026, the brand has
-        expanded into apparel, accessories, and fine art collaborations, bringing
-        the character&rsquo;s multidimensional spirit into new forms and creative
-        disciplines.
-      </>
-    ),
-  },
-  {
-    src: "/media/about-4.webp",
-    alt: "Madclub gathering bathed in red light",
-    copy: (
-      <>
-        <strong className="font-semibold text-bunny-white">
-          Madclub by Madbunny
-        </strong>{" "}
-        is a global collective of DJs, artists, creatives, and collectors united by
-        a shared passion for bold individuality. Together, they champion
-        creativity, connection, and the courage to express every side of who you
-        are.
-      </>
-    ),
-  },
-];
+import { CHAPTERS } from "./chapters";
 
 const LAST = CHAPTERS.length - 1;
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
@@ -83,9 +26,17 @@ export default function AboutStory() {
   const joinRef = useRef<HTMLAnchorElement>(null);
 
   // Dark full-page mode — mandatory snap, hidden scrollbar, dark nav/footer.
+  // sm+ only: on mobile the route renders AboutSimple (light one-pager), so
+  // the dark theme must not take over there.
   useEffect(() => {
-    document.documentElement.classList.add("about-fullpage");
+    const mq = window.matchMedia("(min-width: 640px)");
+    const apply = () => {
+      document.documentElement.classList.toggle("about-fullpage", mq.matches);
+    };
+    apply();
+    mq.addEventListener("change", apply);
     return () => {
+      mq.removeEventListener("change", apply);
       document.documentElement.classList.remove("about-fullpage");
     };
   }, []);
@@ -314,16 +265,15 @@ export default function AboutStory() {
           ))}
         </div>
 
-        {/* Copy — one per chapter, cross-faded. Lifted on mobile so long
-            chapters clear the [scroll down] hint. */}
-        <div className="relative h-40 w-full max-w-2xl px-4 max-sm:-translate-y-[40px]">
+        {/* Copy — one per chapter, cross-faded. */}
+        <div className="relative h-40 w-full max-w-2xl px-4">
           {CHAPTERS.map((c, i) => (
             <p
               key={c.src}
               ref={(el) => {
                 copyRefs.current[i] = el;
               }}
-              className="absolute inset-x-4 top-0 text-center text-[15px] leading-relaxed text-bunny-white/80 max-sm:text-[12px] max-sm:leading-[20px]"
+              className="absolute inset-x-4 top-0 text-center text-[15px] leading-relaxed text-bunny-white/80 [&_strong]:font-semibold [&_strong]:text-bunny-white"
             >
               {c.copy}
             </p>
