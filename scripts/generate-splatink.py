@@ -25,7 +25,7 @@ HEADINGS = {
     "collectibles": "Collectibles",
     "apparel": "Apparel",
     "about": "About Madbunny",
-    "joinTheClub": "Join club Madbunny",
+    "joinTheClub": "Join Madclub®",
 }
 
 SIZE = 100  # arbitrary; SVG scales
@@ -55,11 +55,13 @@ def main() -> None:
                 x += 0.33 * SIZE
                 continue
             glyph = glyph_set[name]
+            # ® renders small and baseline-aligned (mock), not at full cap size.
+            s = scale * (0.42 if ch == "®" else 1)
             # Font units are y-up; SVG is y-down → flip y, then offset by pen x.
-            transform = (scale, 0, 0, -scale, x, 0)
+            transform = (s, 0, 0, -s, x, 0)
             glyph.draw(TransformPen(svg_pen, transform))
             glyph.draw(TransformPen(bounds_pen, transform))
-            x += glyph.width * scale
+            x += glyph.width * s
 
         if bounds_pen.bounds is None:
             sys.exit(f"No outlines produced for {text!r}")

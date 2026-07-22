@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { Image as ProductImage } from "@/lib/shopify/types";
 
-// Browses all product images with < / > controls and a thumbnail strip.
+// Browses all product images by scrolling: the slides live in a scroll-snap
+// track — swipe on touch, trackpad/shift-scroll on desktop — plus a thumbnail
+// strip that scrolls the same track smoothly.
 export default function ProductGallery({
   images,
   title,
@@ -14,22 +15,36 @@ export default function ProductGallery({
   title: string;
 }) {
   const [index, setIndex] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
   if (images.length === 0) return <div className="aspect-square bg-white" />;
 
   const count = images.length;
-  const go = (delta: number) => setIndex((i) => (i + delta + count) % count);
+
+  const goTo = (i: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const target = ((i % count) + count) % count; // wrap both directions
+    track.scrollTo({ left: target * track.clientWidth, behavior: "smooth" });
+  };
+
+  // Keeps the thumbnail ring in sync with native swipes and smooth scrolls.
+  const onScroll = () => {
+    const track = trackRef.current;
+    if (!track) return;
+    const i = Math.round(track.scrollLeft / track.clientWidth);
+    setIndex((prev) => (i === prev ? prev : i));
+  };
 
   return (
     <div>
-      <div className="relative aspect-square overflow-hidden bg-white">
-        {/* Slides sit in a full-width flex track; translating the track by one
-            viewport width per step gives the horizontal carousel slide. */}
+      <div className="relative aspect-square bg-white">
         <div
-          className="flex h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
-          style={{ transform: `translateX(-${index * 100}%)` }}
+          ref={trackRef}
+          onScroll={onScroll}
+          className="flex h-full w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {images.map((img, i) => (
-            <div key={img.url} className="relative h-full w-full shrink-0">
+            <div key={img.url} className="relative h-full w-full shrink-0 snap-center">
               <Image
                 src={img.url}
                 alt={img.altText ?? title}
@@ -42,24 +57,6 @@ export default function ProductGallery({
           ))}
         </div>
 
-        {count > 1 && (
-          <>
-            <button
-              onClick={() => go(-1)}
-              aria-label="Previous image"
-              className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-black transition hover:bg-white"
-            >
-              <ChevronLeft className="h-5 w-5" strokeWidth={1.5} />
-            </button>
-            <button
-              onClick={() => go(1)}
-              aria-label="Next image"
-              className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-black transition hover:bg-white"
-            >
-              <ChevronRight className="h-5 w-5" strokeWidth={1.5} />
-            </button>
-          </>
-        )}
       </div>
 
       {count > 1 && (
@@ -67,7 +64,7 @@ export default function ProductGallery({
           {images.map((img, i) => (
             <button
               key={img.url}
-              onClick={() => setIndex(i)}
+              onClick={() => goTo(i)}
               aria-label={`View image ${i + 1}`}
               aria-current={i === index}
               className={`relative h-16 w-16 shrink-0 bg-white ${

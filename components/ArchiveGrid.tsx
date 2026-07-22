@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { GridCard } from "@/lib/cards";
@@ -43,8 +46,35 @@ export default function ArchiveGrid({
   /** contain = product cutouts (toys/art); cover = full-bleed photos (apparel). */
   fit?: "contain" | "cover";
 }) {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  // Touch-device name blink (globals.css): arm every cell, then flag it seen
+  // the first time it scrolls into view. The classes only take effect under
+  // @media (hover: none), so desktop hover typing is unaffected.
+  useEffect(() => {
+    const cells = gridRef.current?.querySelectorAll<HTMLElement>(".archive-cell");
+    if (!cells?.length) return;
+    cells.forEach((cell) => cell.classList.add("archive-armed"));
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("archive-seen");
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.25 },
+    );
+    cells.forEach((cell) => io.observe(cell));
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <div className="grid grid-cols-2 border-t border-black/10 md:grid-cols-3 xl:grid-cols-5">
+    <div
+      ref={gridRef}
+      className="grid grid-cols-2 border-t border-black/10 md:grid-cols-3 xl:grid-cols-5"
+    >
       {cards.map((card, i) => (
         <Link
           key={card.key}

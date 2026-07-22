@@ -212,6 +212,55 @@ export default function AboutStory() {
     };
   }, []);
 
+  // Horizontal swipe (touch) — swipe left flips to the next screen, swipe
+  // right to the previous, mirroring the wheel-flip. Vertical swipes keep the
+  // native snap scroll untouched.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    let animating = false;
+    let startX = 0;
+    let startY = 0;
+    let settleTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const onTouchStart = (e: TouchEvent) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      const rect = track.getBoundingClientRect();
+      const vh = window.innerHeight;
+      if (rect.top > vh * 0.5 || rect.bottom < vh * 0.5) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      // Deliberate horizontal swipes only.
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+      if (animating) return;
+      const p = clamp(-rect.top / vh, 0, LAST);
+      const dir = dx < 0 ? 1 : -1; // swipe left → forward
+      const target = clamp(Math.round(p) + dir, 0, LAST);
+      if (target === Math.round(p)) return;
+      animating = true;
+      window.scrollTo({
+        top: window.scrollY + rect.top + target * vh,
+        behavior: "smooth",
+      });
+      if (settleTimer) clearTimeout(settleTimer);
+      settleTimer = setTimeout(() => {
+        animating = false;
+      }, 700);
+    };
+
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchend", onTouchEnd);
+      if (settleTimer) clearTimeout(settleTimer);
+    };
+  }, []);
+
   // Nav "About" while already here → restart the story from the first screen.
   useEffect(() => {
     const onDocClick = (e: MouseEvent) => {
@@ -265,8 +314,9 @@ export default function AboutStory() {
           ))}
         </div>
 
-        {/* Copy — one per chapter, cross-faded. */}
-        <div className="relative h-40 w-full max-w-2xl px-4">
+        {/* Copy — one per chapter, cross-faded. Lifted on mobile so long
+            chapters clear the [scroll down] hint. */}
+        <div className="relative h-40 w-full max-w-2xl px-4 max-sm:-translate-y-[90px]">
           {CHAPTERS.map((c, i) => (
             <p
               key={c.src}
@@ -287,7 +337,7 @@ export default function AboutStory() {
             onClick={() =>
               window.scrollBy({ top: window.innerHeight, behavior: "smooth" })
             }
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-mono text-[11px] uppercase tracking-[0.25em] text-mad-red transition-opacity hover:opacity-70"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-mono text-[11px] uppercase tracking-[0.25em] text-mad-red transition-opacity hover:opacity-70 max-sm:hidden"
           >
             [ Scroll down ]
           </button>

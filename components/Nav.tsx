@@ -38,7 +38,7 @@ export default function Nav() {
         <Link href="/apparel" className={linkClass}>
           Apparel
         </Link>
-        <Link href="/" aria-label="Madbunny home" className={linkClass}>
+        <Link href="/collectibles" aria-label="Madbunny collectibles" className={linkClass}>
           <BunnyMark className="h-6 w-6" />
         </Link>
         <Link href="/about" className={linkClass}>
@@ -58,12 +58,30 @@ export default function Nav() {
         </a>
       </nav>
 
-      {/* below md: mark + menu toggle */}
-      <nav className="flex items-center justify-between px-4 py-4 md:hidden">
-        <Link href="/" aria-label="Madbunny home" className={linkClass}>
-          <BunnyMark className="h-6 w-6" />
+      {/* below md: menu toggle (left) · mark (center) · Instagram (right).
+          grid-cols-3 keeps the mark centered no matter the side icons' widths.
+          The -m-3/p-3 pair gives each control a ~44px tap area while leaving the
+          icon visually where it sits. */}
+      <nav className="grid grid-cols-3 items-center px-4 py-3 md:hidden">
+        <div className="flex items-center justify-self-start">
+          <MobileMenu />
+        </div>
+        <Link
+          href="/collectibles"
+          aria-label="Madbunny collectibles"
+          className={`${linkClass} -m-3 justify-self-center p-3`}
+        >
+          <BunnyMark className="h-[1.44rem] w-[1.44rem]" />
         </Link>
-        <MobileMenu />
+        <a
+          href={INSTAGRAM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
+          className={`${linkClass} -m-3 justify-self-end p-3`}
+        >
+          <InstagramGlyph className="h-5 w-5" />
+        </a>
       </nav>
     </header>
   );
