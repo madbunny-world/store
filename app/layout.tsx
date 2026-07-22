@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
 import FloatingCart from "@/components/cart/FloatingCart";
+import { siteUrl } from "@/lib/site";
 
 // Geist Mono: nav, labels, captions, timestamps. OFL, free, self-hosted by next/font.
 const geistMono = Geist_Mono({
@@ -25,16 +26,18 @@ const bebasNeue = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://madbunny.com"),
+  metadataBase: new URL(siteUrl()),
   title: {
-    default: "Madbunny",
+    default: "Madbunny — Limited drops",
     template: "%s — Madbunny",
   },
-  description: "Madbunny. A character-IP lifestyle brand. Limited drops.",
+  description:
+    "Madbunny. A character-IP drop brand — collectible figures, apparel, and fine art. Available in limited numbers.",
   openGraph: {
     siteName: "Madbunny",
     type: "website",
   },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({

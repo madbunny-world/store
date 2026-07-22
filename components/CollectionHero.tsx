@@ -4,15 +4,10 @@ import { useEffect, useState } from "react";
 
 // toy-360 loops on the `loop` attribute alone — no trim, no crossfade, no JS loop
 // hack. Under prefers-reduced-motion we show the static poster instead of
-// autoplaying video. The container matches the clip's 1920×800 (12/5) aspect so
-// the full spin shows with no crop. Captions overlay at mid-height (mock design).
-export default function CollectionHero({
-  left,
-  right,
-}: {
-  left: string;
-  right: string;
-}) {
+// autoplaying video. The container matches the clip's 2592×1080 aspect so the
+// full frame shows with no crop. The marketing clip carries its own title text,
+// so there is no HTML caption overlay.
+export default function CollectionHero() {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -46,11 +41,6 @@ export default function CollectionHero({
             <source src="/media/toy-360.mp4" type="video/mp4" />
           </video>
         )}
-
-        <div className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 justify-between px-6 text-[13px] text-black sm:px-12 sm:text-[15px]">
-          <span className="font-medium">{left}</span>
-          <span>{right}</span>
-        </div>
       </div>
     </section>
   );

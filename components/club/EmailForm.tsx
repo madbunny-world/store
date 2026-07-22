@@ -48,7 +48,7 @@ export default function EmailForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-6 w-full max-w-sm">
+    <form onSubmit={onSubmit} className="mt-6 w-full max-w-[16.8rem]">
       <label htmlFor="email" className="sr-only">
         Email address
       </label>

@@ -72,6 +72,88 @@
   }
 }
 
+/* Full-page snapping for /about — one chapter per screen, mandatory snap, no
+   visible scrollbar. AboutStory toggles `about-fullpage` on <html> so this is
+   scoped to that route only. */
+html.about-fullpage {
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* legacy Edge */
+}
+html.about-fullpage::-webkit-scrollbar {
+  display: none; /* Chromium / Safari */
+}
+/* Dark theme while the about story is mounted (reference design): near-black
+   page, translucent dark nav with gray links. The footer is hidden entirely so
+   the story ends exactly at the last screen — no extra scroll height. */
+html.about-fullpage body {
+  background: #151312;
+}
+html.about-fullpage header {
+  background: rgba(21, 19, 18, 0.92);
+}
+html.about-fullpage header a {
+  color: #a7a5a4;
+}
+html.about-fullpage header a:hover {
+  color: #ffffff;
+  opacity: 1;
+}
+html.about-fullpage footer {
+  display: none;
+}
+
+/* Subtle float-in on page open — every route except the landing page (its main
+   opts out with data-no-float so the metal-plate interaction stays untouched). */
+@keyframes page-float-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+main:not([data-no-float]) {
+  animation: page-float-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  main:not([data-no-float]) {
+    animation: none;
+  }
+}
+
+/* Archive grid (collectibles/apparel) — reference-style hover reveal. The item
+   name "types on" left-to-right in steps, terminal-style, while the image
+   enlarges inside its lattice cell. */
+@keyframes archive-type {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+.archive-name {
+  clip-path: inset(0 100% 0 0);
+}
+.archive-cell:hover .archive-name {
+  animation: archive-type 0.3s steps(16, end) 140ms forwards;
+}
+/* Touch devices: no hover — name is always readable, no typing animation. */
+@media (hover: none) {
+  .archive-name {
+    clip-path: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .archive-cell:hover .archive-name {
+    animation: none;
+    clip-path: none;
+  }
+}
+
 html {
   -webkit-text-size-adjust: 100%;
 }

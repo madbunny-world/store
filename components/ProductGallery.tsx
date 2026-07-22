@@ -17,20 +17,30 @@ export default function ProductGallery({
   if (images.length === 0) return <div className="aspect-square bg-white" />;
 
   const count = images.length;
-  const current = images[index];
   const go = (delta: number) => setIndex((i) => (i + delta + count) % count);
 
   return (
     <div>
-      <div className="relative aspect-square bg-white">
-        <Image
-          src={current.url}
-          alt={current.altText ?? title}
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-contain"
-          priority
-        />
+      <div className="relative aspect-square overflow-hidden bg-white">
+        {/* Slides sit in a full-width flex track; translating the track by one
+            viewport width per step gives the horizontal carousel slide. */}
+        <div
+          className="flex h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          style={{ transform: `translateX(-${index * 100}%)` }}
+        >
+          {images.map((img, i) => (
+            <div key={img.url} className="relative h-full w-full shrink-0">
+              <Image
+                src={img.url}
+                alt={img.altText ?? title}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain"
+                priority={i === 0}
+              />
+            </div>
+          ))}
+        </div>
 
         {count > 1 && (
           <>

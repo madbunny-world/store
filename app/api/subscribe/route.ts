@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 import { createSubscriber, hasAdminEnv } from "@/lib/shopify/admin";
-import { appendSubscriber, hasSheetsEnv } from "@/lib/sheets";
+import { appendSubscriber, hasAirtableEnv } from "@/lib/airtable";
 
-// Public POST that writes to Shopify + a Sheet — so it's hardened: honeypot,
+// Public POST that writes to Shopify + Airtable — so it's hardened: honeypot,
 // IP rate limit, server-side email validation. Two writes (D-09): Shopify is the
-// real sendable list, the Sheet is Gia's working record. Either credential set may
-// be absent pre-launch; we persist wherever we can and never expose which.
+// real sendable list, Airtable is Gia's working log. Either credential set may be
+// absent pre-launch; we persist wherever we can and never expose which.
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -41,14 +41,14 @@ export async function POST(request: Request) {
   // one write errors — record what we can and log the rest.
   const results = await Promise.allSettled([
     hasAdminEnv() ? createSubscriber(email) : Promise.resolve<null>(null),
-    hasSheetsEnv() ? appendSubscriber(email) : Promise.resolve<null>(null),
+    hasAirtableEnv() ? appendSubscriber(email) : Promise.resolve<null>(null),
   ]);
 
   for (const r of results) {
     if (r.status === "rejected") console.error("[subscribe] write failed:", r.reason);
   }
 
-  const configured = hasAdminEnv() || hasSheetsEnv();
+  const configured = hasAdminEnv() || hasAirtableEnv();
   const persisted = results.some((r) => r.status === "fulfilled" && r.value !== null);
 
   if (configured && !persisted) {

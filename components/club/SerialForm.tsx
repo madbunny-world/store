@@ -21,7 +21,7 @@ export default function SerialForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-6 w-full max-w-sm">
+    <form onSubmit={onSubmit} className="mt-6 w-full max-w-[16.8rem]">
       <label htmlFor="serial" className="sr-only">
         Serial code
       </label>
