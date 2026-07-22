@@ -20,27 +20,12 @@ export default async function ApparelPage() {
         <SplatinkHeading name="apparel" className="h-7 sm:h-8" />
       </div>
 
-      {/* Hero — Madbunny apparel campaign photo. Cropped to 16:7 on mobile;
-          full native ratio from sm up. */}
-      <div className="aspect-[16/7] w-full overflow-hidden bg-card sm:aspect-auto">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/media/apparel-campaign-1.webp"
-          alt=""
-          width={1710}
-          height={594}
-          className="h-full w-full object-cover sm:h-auto"
-        />
-      </div>
-
       {cards.length === 0 ? (
         <p className="py-16 text-center font-mono text-[11px] text-gun-metal">
           No pieces available.
         </p>
       ) : (
-        <div className="mt-14">
-          <ArchiveGrid cards={cards} fit="cover" />
-        </div>
+        <ArchiveGrid cards={cards} fit="cover" />
       )}
     </main>
   );
