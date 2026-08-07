@@ -1,13 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import type { Product, ProductVariant } from "@/lib/shopify/types";
 import { formatMoney } from "@/lib/money";
 import { isFineArt } from "@/lib/catalog";
 import { useCart } from "./cart/CartProvider";
+import InquiryDialog from "./InquiryDialog";
 
-// TODO(Gia): real inquiry address for Fine Art Edition pieces.
-const INQUIRY_EMAIL = "hello@madbunny.com";
+// Shared by the CTA bar here and the inquiry dialog's submit button, so the two
+// can't drift.
+export const CTA_BAR_CLASS =
+  "flex w-full items-center justify-between px-4 py-2 font-sans text-[12px] uppercase tracking-wider text-bunny-white transition-opacity";
 
 // Option-value name → brand swatch (colors). Falls back to gun-metal.
 const SWATCH: Record<string, string> = {
@@ -16,6 +20,7 @@ const SWATCH: Record<string, string> = {
   "mad red": "#ff402b",
   red: "#ff402b",
   "gun metal": "#4d5257",
+  "gun metal gray": "#4d5257",
   "bunny white": "#fff8f8",
   white: "#fff8f8",
 };
@@ -39,6 +44,7 @@ export default function BuyPanel({
 }) {
   const { addItem, isPending } = useCart();
   const options = useMemo(() => meaningfulOptions(product), [product]);
+  const [inquiryOpen, setInquiryOpen] = useState(false);
 
   const [selected, setSelected] = useState<Record<string, string>>(() => {
     const initial = initialVariantId
@@ -82,13 +88,25 @@ export default function BuyPanel({
     });
   }
 
+  /** Variant image representing an option value (color thumbs). */
+  function valueImage(optName: string, value: string) {
+    return product.variants.find(
+      (v) =>
+        v.selectedOptions.find((so) => so.name === optName)?.value === value &&
+        v.image,
+    )?.image;
+  }
+
+
   const priceMoney = variant?.price ?? product.minPrice;
-  const showSold = !fineArt && (requireSelection ? variant && !available : !available);
+  const soldOut = !fineArt && (requireSelection ? Boolean(variant) && !available : !available);
+
+  const barClass = CTA_BAR_CLASS;
 
   return (
     <div className="font-mono text-[13px] leading-relaxed">
       {/* Meta (variant-driven where relevant) */}
-      <dl className="space-y-1 text-gun-metal">
+      <dl className="mt-4 space-y-1 text-gun-metal">
         {product.year != null && <MetaRow label="Year" value={String(product.year)} />}
         {variant?.medium && <MetaRow label="Medium" value={variant.medium} />}
         {(product.dimensionsMetric || product.dimensionsIn) && (
@@ -102,87 +120,133 @@ export default function BuyPanel({
         )}
       </dl>
 
-      {/* Option selectors (colorways, sizes …). Sold-out values struck through. */}
+      {/* Option selectors. Color renders as variant-photo thumbs when the
+          variants carry images (reference), swatch chips otherwise; other
+          options (Size) as a plain text row, sold-out values struck through. */}
       {options.map((o) => {
         const isColor = o.name.toLowerCase() === "color";
+        const thumbs = isColor && o.values.every((v) => valueImage(o.name, v));
         return (
-          <div key={o.id} className="mt-6">
-            <div className="mb-2 text-[11px] uppercase tracking-wider text-gun-metal">{o.name}</div>
-            <div className="flex flex-wrap gap-2">
-              {o.values.map((value) => {
-                const sel = selected[o.name] === value;
-                const avail = valueAvailable(o.name, value);
-                return (
-                  <button
-                    key={value}
-                    onClick={() => setSelected((prev) => ({ ...prev, [o.name]: value }))}
-                    aria-pressed={sel}
-                    title={value}
-                    className={`flex items-center gap-2 border px-2 py-1 text-[11px] transition-colors ${
-                      sel ? "border-black" : "border-black/20 hover:border-black/50"
-                    } ${!avail ? "text-gun-metal line-through" : ""}`}
-                  >
-                    {isColor && (
+          <div key={o.id} className="mt-7">
+            {thumbs ? (
+              <div className="flex flex-wrap gap-3">
+                {o.values.map((value) => {
+                  const sel = selected[o.name] === value;
+                  const img = valueImage(o.name, value)!;
+                  return (
+                    <button
+                      key={value}
+                      onClick={() => setSelected((prev) => ({ ...prev, [o.name]: value }))}
+                      aria-pressed={sel}
+                      aria-label={value}
+                      title={value}
+                      className="group/thumb"
+                    >
+                      <span className="relative block h-16 w-14 bg-white">
+                        <Image
+                          src={img.url}
+                          alt=""
+                          fill
+                          sizes="56px"
+                          className="object-contain"
+                        />
+                      </span>
                       <span
-                        className="inline-block h-3 w-3 rounded-full border border-black/10"
-                        style={{ backgroundColor: SWATCH[value.toLowerCase()] ?? "#4d5257" }}
+                        className={`mx-auto mt-1 block h-[2px] w-8 ${
+                          sel ? "bg-black" : "bg-transparent group-hover/thumb:bg-black/30"
+                        }`}
                       />
-                    )}
-                    {value}
-                  </button>
-                );
-              })}
-            </div>
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {o.values.map((value) => {
+                  const sel = selected[o.name] === value;
+                  const avail = valueAvailable(o.name, value);
+                  return (
+                    <button
+                      key={value}
+                      onClick={() => setSelected((prev) => ({ ...prev, [o.name]: value }))}
+                      aria-pressed={sel}
+                      title={value}
+                      className={`min-w-8 px-2 py-1 text-center text-[11px] uppercase tracking-wider transition-colors ${
+                        sel
+                          ? "bg-black text-bunny-white"
+                          : avail
+                            ? "text-black hover:opacity-60"
+                            : "text-gun-metal/70 line-through"
+                      }`}
+                    >
+                      {isColor && (
+                        <span
+                          className="mr-1.5 inline-block h-3 w-3 rounded-full border border-black/10 align-middle"
+                          style={{ backgroundColor: SWATCH[value.toLowerCase()] ?? "#4d5257" }}
+                        />
+                      )}
+                      {value}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         );
       })}
 
-      {/* Amount left (Mad Red) above the price. Fine art is inquiry-only — no
-          stock line, price + Inquire, never Sold. */}
-      {!fineArt && !showSold && qty != null && (
-        <div className="mt-6 text-mad-red">{qty} left</div>
+      {/* Amount left (Mad Red) above the bar. Fine art is inquiry-only — no
+          stock line, Inquire + price, never Sold. */}
+      {!fineArt && !soldOut && qty != null && (
+        <div className="mt-7 font-sans text-[12px] text-mad-red">{qty} in stock</div>
       )}
-      <div
-        className={`text-[15px] text-black ${
-          !fineArt && !showSold && qty != null ? "mt-1" : "mt-6"
-        }`}
-      >
-        {showSold ? "Sold" : formatMoney(priceMoney)}
-      </div>
 
-      {/* Action */}
-      <div className="mt-6">
+      {/* CTA bar — label left, price right (reference). */}
+      <div className={!fineArt && !soldOut && qty != null ? "mt-2" : "mt-7"}>
         {fineArt ? (
-          <a
-            href={`mailto:${INQUIRY_EMAIL}?subject=${encodeURIComponent(`Inquiry: ${product.title}`)}`}
-            className="inline-block bg-black px-6 py-3 text-[11px] uppercase tracking-wider text-bunny-white transition-opacity hover:opacity-80"
-          >
-            Inquire
-          </a>
-        ) : requireSelection ? (
           <button
-            onClick={() => variant && addItem(variant.id)}
-            disabled={isPending || !variant || !available}
-            className="bg-black px-6 py-3 text-[11px] uppercase tracking-wider text-bunny-white transition-opacity hover:opacity-80 disabled:opacity-50"
+            type="button"
+            onClick={() => setInquiryOpen(true)}
+            className={`${barClass} bg-black hover:opacity-80`}
           >
-            {!allChosen
-              ? `Select ${options.map((o) => o.name.toLowerCase()).join(" / ")}`
-              : !available
-                ? "Sold out"
-                : isPending
-                  ? "Adding"
-                  : "Add to cart"}
+            <span>Inquire</span>
+            <span>{formatMoney(priceMoney)}</span>
           </button>
-        ) : !available ? null : (
+        ) : (
           <button
-            onClick={() => variant && addItem(variant.id)}
-            disabled={isPending || !variant}
-            className="bg-black px-6 py-3 text-[11px] uppercase tracking-wider text-bunny-white transition-opacity hover:opacity-80 disabled:opacity-50"
+            onClick={() => variant && available && addItem(variant.id)}
+            disabled={isPending || !variant || !available}
+            className={`${barClass} ${
+              soldOut ? "bg-[#B3B3B3]" : "bg-black"
+            } ${variant && available ? "hover:opacity-80" : "cursor-default"}`}
           >
-            {isPending ? "Adding" : "Add to cart"}
+            <span>
+              {requireSelection && !allChosen
+                ? `Select ${options.map((o) => o.name.toLowerCase()).join(" / ")}`
+                : soldOut
+                  ? "Sold out"
+                  : isPending
+                    ? "Adding"
+                    : "Add to cart"}
+            </span>
+            <span>{formatMoney(priceMoney)}</span>
           </button>
         )}
       </div>
+
+      {!fineArt && (
+        <p className="mt-2.5 font-sans text-[12px] font-medium text-[#909090]">
+          Free shipping on orders over $100. Fine art collections excluded.
+        </p>
+      )}
+
+      {fineArt && inquiryOpen && (
+        <InquiryDialog
+          onClose={() => setInquiryOpen(false)}
+          productTitle={product.title}
+          price={formatMoney(priceMoney)}
+        />
+      )}
     </div>
   );
 }

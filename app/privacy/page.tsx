@@ -21,14 +21,21 @@ export default function PrivacyPage() {
           it for one thing: to send updates about drops, releases, and news.
         </p>
         <p>
-          <strong>Where it lives.</strong> Your email is stored with Airtable, the
-          service we use to run our list. Airtable holds and processes this data on
-          our behalf.
+          <strong>Fine art inquiries.</strong>{" "}
+          When you inquire about a fine art piece, we collect your email, full name,
+          and address, plus a note if you write one. The address is used to quote
+          shipping for that piece. The rest is used to reply to you about it. An
+          inquiry does not add you to the mailing list.
+        </p>
+        <p>
+          <strong>Where it lives.</strong> Your email and any inquiry details are
+          stored with Airtable, the service we use to run our list and our
+          inquiries. Airtable holds and processes this data on our behalf.
         </p>
         <p>
           <strong>What we don&rsquo;t do.</strong>{" "}
-          We don&rsquo;t sell your email. We don&rsquo;t rent it. We don&rsquo;t hand
-          it to anyone outside the tools we use to run Madbunny.
+          We don&rsquo;t sell your details. We don&rsquo;t rent them. We don&rsquo;t
+          hand them to anyone outside the tools we use to run Madbunny.
         </p>
         <p>
           <strong>Leaving.</strong>{" "}
