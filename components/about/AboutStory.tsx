@@ -238,7 +238,7 @@ export default function AboutStory() {
       {/* The stage — sticks for the whole story. */}
       <div className="sticky top-0 flex h-screen flex-col items-center overflow-hidden">
         <div className="flex flex-col items-center gap-3 pt-24 text-bunny-white">
-          <SplatinkHeading name="about" className="h-7 sm:h-8" />
+          <SplatinkHeading name="about" className="h-10 sm:h-11" />
           <p className="font-mono text-[11px] uppercase tracking-[0.3em]">
             The Founding Story
           </p>

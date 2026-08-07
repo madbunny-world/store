@@ -134,35 +134,9 @@ main:not([data-no-float]) {
   }
 }
 
-/* Archive grid (collectibles/apparel) — reference-style hover reveal. The item
-   name "types on" left-to-right in steps, terminal-style, while the image
-   enlarges inside its lattice cell. */
-@keyframes archive-type {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-.archive-name {
-  clip-path: inset(0 100% 0 0);
-}
-.archive-cell:hover .archive-name {
-  animation: archive-type 0.3s steps(16, end) 140ms forwards;
-}
-/* Touch devices: no hover — name is always readable, no typing animation. */
-@media (hover: none) {
-  .archive-name {
-    clip-path: none;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .archive-cell:hover .archive-name {
-    animation: none;
-    clip-path: none;
-  }
-}
+/* Archive grid (collectibles/apparel). The name sits in its own row under the
+   square image, so it stays readable at rest — the old hover "type on" reveal
+   would leave that row blank. The image keeps its hover zoom (ArchiveGrid). */
 
 html {
   -webkit-text-size-adjust: 100%;

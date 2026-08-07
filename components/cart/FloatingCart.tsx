@@ -3,8 +3,8 @@
 import { usePathname } from "next/navigation";
 import { useCart } from "./CartProvider";
 
-// Mock design: a circular gray bubble pinned to the right edge, vertically
-// centered, opens the cart drawer. The home page doesn't show it.
+// Mock design: a circular gray bubble pinned to the lower-right corner, opens
+// the cart drawer. The home page doesn't show it.
 export default function FloatingCart() {
   const pathname = usePathname();
   const { cart, open } = useCart();
@@ -15,7 +15,7 @@ export default function FloatingCart() {
     <button
       onClick={open}
       aria-label={count > 0 ? `Open cart, ${count} items` : "Open cart"}
-      className="fixed right-4 top-1/2 z-[60] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-card text-gun-metal transition-opacity hover:opacity-70"
+      className="fixed bottom-6 right-4 z-[60] flex h-11 w-11 items-center justify-center rounded-full bg-card text-gun-metal transition-opacity hover:opacity-70"
     >
       {/* bag glyph */}
       <svg

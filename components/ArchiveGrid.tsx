@@ -2,11 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import type { GridCard } from "@/lib/cards";
 
-// Collection-archive lattice (reference: numbered specimen grid). Each cell:
-// (NN) top-left, small centered image that enlarges ~2x on hover inside corner
-// brackets, item name typing on at bottom-left (.archive-name in globals.css).
-// No price or stock on the grid — the detail modal carries those. Unlike the
-// grayscale reference, images stay in full color at all sizes (Gia's rule).
+// Collection-archive lattice (reference: numbered specimen grid). Each cell is
+// vertically rectangular: a full-width square image with (NN) overlaid on its
+// top-left corner, and the item name in flow underneath. No price or stock on
+// the grid — the detail modal carries those. Unlike the grayscale reference,
+// images stay in full color at all sizes (Gia's rule).
 
 function Crosses() {
   // + marks on all four lattice intersections of the cell. Shared corners
@@ -50,38 +50,32 @@ export default function ArchiveGrid({
           key={card.key}
           href={card.href}
           prefetch
-          className="group archive-cell relative aspect-square border-b border-r border-black/10 md:aspect-[10/9]"
+          className="group archive-cell relative flex flex-col border-b border-r border-black/10"
         >
           <Crosses />
 
-          {/* Index — z-lifted so an enlarged image can never paint over it */}
-          <span className="absolute left-3 top-3 z-10 font-mono text-[11px] tracking-wider text-black">
-            ({String(i + 1).padStart(2, "0")})
-          </span>
-
-          {/* Specimen image — 66% of cell at rest; gentle 1.1x on hover, sized so
-              the enlarged image never reaches the (NN) index. */}
-          <div className="absolute left-1/2 top-1/2 aspect-square w-[66%] -translate-x-1/2 -translate-y-1/2 transition-transform duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110">
+          {/* Specimen image — fills the cell's full square; gentle 1.1x zoom on
+              hover, clipped to the square. The (NN) index overlays its top-left
+              corner and stays put while the image zooms. */}
+          <div className="relative aspect-square w-full overflow-hidden">
             {card.image && (
               <Image
                 src={card.image.url}
                 alt={card.image.altText ?? card.title}
                 fill
                 sizes="(max-width: 768px) 50vw, 20vw"
-                className={fit === "cover" ? "object-cover" : "object-contain"}
+                className={`transition-transform duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 ${
+                  fit === "cover" ? "object-cover" : "object-contain"
+                }`}
               />
             )}
+            <span className="absolute left-3 top-3 z-10 font-mono text-[11px] tracking-wider text-black">
+              ({String(i + 1).padStart(2, "0")})
+            </span>
           </div>
 
-          {/* White fade under the name — appears only on hover, when the name
-              reveals (between image layer and text layer by DOM order). */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-[15%] bg-[linear-gradient(to_top,white_35%,transparent)] opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-          />
-
-          {/* Name — bottom-left, types on (globals.css .archive-name) */}
-          <span className="archive-name absolute bottom-3 left-3 right-3 font-mono text-[11px] leading-snug text-black">
+          {/* Name — below the image, always readable */}
+          <span className="archive-name px-3 pb-4 pt-3 font-mono text-[11px] leading-snug text-black">
             {card.title}
           </span>
         </Link>

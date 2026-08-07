@@ -19,7 +19,7 @@ export default async function CollectiblesPage() {
     <main className="flex flex-1 flex-col pb-20">
       {/* Mobile stacks video → title → items; sm+ keeps title → video → items. */}
       <div className="order-2 flex flex-col items-center gap-3 px-4 pb-6 pt-6 sm:order-1 sm:pb-10 sm:pt-7">
-        <SplatinkHeading name="collectibles" className="h-7 sm:h-8" />
+        <SplatinkHeading name="collectibles" className="h-10 sm:h-11" />
       </div>
       <div className="order-1 sm:order-2">
         <CollectionHero />

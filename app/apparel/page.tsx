@@ -17,7 +17,7 @@ export default async function ApparelPage() {
   return (
     <main className="flex-1 pb-20">
       <div className="flex flex-col items-center gap-3 px-4 pb-10 pt-7">
-        <SplatinkHeading name="apparel" className="h-7 sm:h-8" />
+        <SplatinkHeading name="apparel" className="h-10 sm:h-11" />
       </div>
 
       {cards.length === 0 ? (

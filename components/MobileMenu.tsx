@@ -5,8 +5,6 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useCart } from "./cart/CartProvider";
 
-const INSTAGRAM_URL = "https://www.instagram.com/madbunny.world/";
-
 const links = [
   { href: "/collectibles", label: "Collectibles" },
   { href: "/apparel", label: "Apparel" },
@@ -47,14 +45,6 @@ export default function MobileMenu() {
             >
               Cart{count > 0 ? ` (${count})` : ""}
             </button>
-            <a
-              href={INSTAGRAM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#FF5754]! hover:opacity-60"
-            >
-              Instagram
-            </a>
           </nav>
         </div>
       )}
