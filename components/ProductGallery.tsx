@@ -2,11 +2,12 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { Image as ProductImage } from "@/lib/shopify/types";
 
-// Browses all product images by scrolling: the slides live in a scroll-snap
-// track — swipe on touch, trackpad/shift-scroll on desktop — plus a thumbnail
-// strip that scrolls the same track smoothly.
+// Reference-style gallery: slides in a scroll-snap track (swipe on touch,
+// trackpad/shift-scroll on desktop), bare chevrons at the image edges on sm+,
+// and a thin progress line under the image instead of a thumbnail strip.
 export default function ProductGallery({
   images,
   title,
@@ -27,7 +28,7 @@ export default function ProductGallery({
     track.scrollTo({ left: target * track.clientWidth, behavior: "smooth" });
   };
 
-  // Keeps the thumbnail ring in sync with native swipes and smooth scrolls.
+  // Keeps the progress line in sync with native swipes and smooth scrolls.
   const onScroll = () => {
     const track = trackRef.current;
     if (!track) return;
@@ -57,29 +58,36 @@ export default function ProductGallery({
           ))}
         </div>
 
+        {count > 1 && (
+          <>
+            <button
+              onClick={() => goTo(index - 1)}
+              aria-label="Previous image"
+              className="absolute left-0 top-1/2 hidden -translate-y-1/2 p-2 text-gun-metal/60 transition-colors hover:text-black sm:block"
+            >
+              <ChevronLeft className="h-7 w-7" strokeWidth={1} />
+            </button>
+            <button
+              onClick={() => goTo(index + 1)}
+              aria-label="Next image"
+              className="absolute right-0 top-1/2 hidden -translate-y-1/2 p-2 text-gun-metal/60 transition-colors hover:text-black sm:block"
+            >
+              <ChevronRight className="h-7 w-7" strokeWidth={1} />
+            </button>
+          </>
+        )}
       </div>
 
+      {/* Progress line — the filled segment slides to the active image. */}
       {count > 1 && (
-        <div className="mt-3 flex flex-wrap gap-3">
-          {images.map((img, i) => (
-            <button
-              key={img.url}
-              onClick={() => goTo(i)}
-              aria-label={`View image ${i + 1}`}
-              aria-current={i === index}
-              className={`relative h-16 w-16 shrink-0 bg-white ${
-                i === index ? "ring-1 ring-black" : "opacity-60 hover:opacity-100"
-              }`}
-            >
-              <Image
-                src={img.url}
-                alt=""
-                fill
-                sizes="64px"
-                className="object-contain p-1"
-              />
-            </button>
-          ))}
+        <div className="mt-4 h-px w-full bg-black/10">
+          <div
+            className="h-[2px] -translate-y-px bg-black transition-transform duration-300 ease-out"
+            style={{
+              width: `${100 / count}%`,
+              transform: `translateX(${index * 100}%)`,
+            }}
+          />
         </div>
       )}
     </div>

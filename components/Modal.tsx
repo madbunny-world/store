@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 
 // Wraps intercepted product detail. The content (ProductDetail) stays a Server
 // Component; only this shell is client. Back button / Escape / backdrop close the
@@ -26,8 +27,8 @@ export default function Modal({ children }: { children: React.ReactNode }) {
 
   return (
     // z-30 sits under the sticky header (z-40): the nav stays visible and
-    // clickable above the detail view. No close button — backdrop click /
-    // Escape / any nav link leaves the modal.
+    // clickable above the detail view. Exits: the X (top right), backdrop
+    // click, Escape, or any nav link.
     <div
       role="dialog"
       aria-modal="true"
@@ -41,8 +42,17 @@ export default function Modal({ children }: { children: React.ReactNode }) {
       />
       <div
         ref={panelRef}
-        className="relative z-10 flex w-full flex-col overflow-y-auto bg-white px-5 pb-5 pt-20 sm:my-auto sm:h-auto sm:max-w-4xl sm:overflow-visible sm:p-8"
+        className="relative z-10 flex w-full flex-col overflow-y-auto bg-white px-5 pb-5 pt-16 sm:my-auto sm:h-auto sm:max-w-4xl sm:overflow-visible sm:p-8"
       >
+        {/* Sits on the breadcrumb's line (top-right); -m-2/p-2 keeps a generous
+            tap area without shifting the glyph off that alignment. */}
+        <button
+          onClick={() => router.back()}
+          aria-label="Close"
+          className="absolute right-5 top-16 z-10 -m-2 p-2 hover:opacity-60 sm:right-8 sm:top-8"
+        >
+          <X className="h-5 w-5" strokeWidth={1.5} />
+        </button>
         {children}
       </div>
     </div>

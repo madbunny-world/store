@@ -21,7 +21,10 @@ const PRODUCT_METAFIELD_IDS = `[
   {namespace: "custom", key: "dimensions_metric"},
   {namespace: "custom", key: "dimensions_in"},
   {namespace: "custom", key: "scale"},
-  {namespace: "custom", key: "tier"}
+  {namespace: "custom", key: "tier"},
+  {namespace: "custom", key: "product_details"},
+  {namespace: "custom", key: "fabric"},
+  {namespace: "custom", key: "care_instructions"}
 ]`;
 
 const VARIANT_METAFIELD_IDS = `[
@@ -154,6 +157,9 @@ function normalizeProduct(p: RawProduct): Product {
     dimensionsIn: m.dimensions_in ?? null,
     scale: m.scale ?? null,
     tier: m.tier ?? null,
+    productDetails: m.product_details ?? null,
+    fabric: m.fabric ?? null,
+    careInstructions: m.care_instructions ?? null,
   };
 }
 

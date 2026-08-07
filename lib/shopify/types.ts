@@ -53,6 +53,11 @@ export type Product = {
   dimensionsIn: string | null;
   scale: string | null;
   tier: string | null;
+  // PDP accordion sections (multi-line text, set in Admin on apparel;
+  // rows hide when null).
+  productDetails: string | null;
+  fabric: string | null;
+  careInstructions: string | null;
 };
 
 // ---- Cart ----
