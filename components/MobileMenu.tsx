@@ -3,19 +3,27 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { useCart } from "./cart/CartProvider";
 
-const links = [
-  { href: "/collectibles", label: "Collectibles" },
-  { href: "/apparel", label: "Apparel" },
-  { href: "/about", label: "About" },
-  { href: "/jointheclub", label: "Join the club" },
+// Mirrors the desktop nav: the three categories sit under Shop. There is no
+// hover on touch, so they are always shown, indented, rather than in a panel.
+const links: { href: string; label: string; children?: { href: string; label: string }[] }[] = [
+  {
+    href: "/",
+    label: "Shop",
+    children: [
+      { href: "/helloworldcollection", label: "“Hello, World” collection" },
+      { href: "/private-collection", label: "Private Collection" },
+      { href: "/apparel", label: "Apparel" },
+    ],
+  },
+  { href: "/studio", label: "Studio" },
+  { href: "/collectorslounge", label: "Collector’s lounge" },
 ];
 
-export default function MobileMenu() {
+// accountUrl: Shopify's hosted sign-in — "My order" links straight there, no
+// interstitial page, so it renders as a plain <a> below.
+export default function MobileMenu({ accountUrl }: { accountUrl: string }) {
   const [open, setOpen] = useState(false);
-  const { cart, open: openCart } = useCart();
-  const count = cart?.totalQuantity ?? 0;
 
   return (
     <>
@@ -29,22 +37,28 @@ export default function MobileMenu() {
       </button>
 
       {open && (
-        <div className="mobile-menu-panel absolute inset-x-0 top-full bg-white px-4 pb-6 pt-2 font-mono text-xs uppercase tracking-wider">
+        <div className="mobile-menu-panel absolute inset-x-0 top-full bg-white px-4 pb-6 pt-2 font-sans text-[11.7px] font-medium uppercase tracking-wide">
           <nav className="flex flex-col gap-4">
             {links.map((l) => (
-              <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="hover:opacity-60">
-                {l.label}
-              </Link>
+              <div key={l.href} className="flex flex-col gap-4">
+                <Link href={l.href} onClick={() => setOpen(false)} className="hover:opacity-60">
+                  {l.label}
+                </Link>
+                {l.children?.map((c) => (
+                  <Link
+                    key={c.href}
+                    href={c.href}
+                    onClick={() => setOpen(false)}
+                    className="pl-4 text-gun-metal hover:opacity-60"
+                  >
+                    {c.label}
+                  </Link>
+                ))}
+              </div>
             ))}
-            <button
-              onClick={() => {
-                setOpen(false);
-                openCart();
-              }}
-              className="text-left hover:opacity-60"
-            >
-              Cart{count > 0 ? ` (${count})` : ""}
-            </button>
+            <a href={accountUrl} onClick={() => setOpen(false)} className="hover:opacity-60">
+              My order
+            </a>
           </nav>
         </div>
       )}

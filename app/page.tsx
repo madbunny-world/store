@@ -1,45 +1,218 @@
 import Link from "next/link";
-import HeroBunny from "@/components/HeroBunny";
-import ZoneClock from "@/components/ZoneClock";
-import { ZONE } from "@/lib/time";
+import { getAllProducts } from "@/lib/shopify/queries";
+import { isFineArt, TAG } from "@/lib/catalog";
+import { toGridCards } from "@/lib/cards";
+import MuseumGrid from "@/components/MuseumGrid";
+import IntroGate from "@/components/intro/IntroGate";
 
-// Home is a landing page, not a gate — the nav (root layout) is present on it.
+// Arms the entrance intro before first paint on hard loads (full cut). The
+// intro plays on EVERY arrival at home; client-side navigations get a ~1s
+// quick cut armed by IntroGate itself on mount. No JS → the attribute is never
+// set → no overlay.
+const INTRO_ARM = `try{document.documentElement.setAttribute("data-intro","play")}catch(e){}`;
+
+// v3 home IS the store: full-bleed campaign banner, the buyable catalog as a
+// museum grid, a Private Collection teaser, a story teaser, then the black
+// newsletter footer. The entrance intro overlays this page on every arrival.
 export default function Home() {
   return (
-    <main
-      data-no-float
-      className="relative flex flex-1 flex-col items-center justify-center px-4 py-16"
-    >
-      {/* City readouts flank the bunny (spec §7.1). On mobile they anchor to the
-          bottom corners; on sm+ they pin to the vertical center, flanking the mark. */}
-      <div className="absolute inset-x-6 bottom-8 flex justify-between font-bebas text-lg uppercase leading-tight tracking-wide sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2">
-        <div className="space-y-0.5">
-          <div>New York, USA</div>
-          <div>Detroit, USA</div>
-          <div className="text-gun-metal">
-            <ZoneClock timeZone={ZONE.eastern} />
+    <>
+      {/* Outside <main>: its float-in animation carries a transform, which
+          would re-anchor a position:fixed overlay to <main> instead of the
+          viewport for the animation's duration. */}
+      <script dangerouslySetInnerHTML={{ __html: INTRO_ARM }} />
+      <IntroGate />
+      <main className="flex-1">
+        <CampaignBanner />
+        <Shop />
+        <CollectorsBand />
+        <PrivateCollection />
+        <StoryTeaser />
+      </main>
+    </>
+  );
+}
+
+function CampaignBanner() {
+  return (
+    // Full-bleed at the image's native 2560×1467 ratio — no crop, no shift.
+    <div className="relative">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/media/madclub-landing.webp"
+        alt="Madclub gathering bathed in red light"
+        width={2560}
+        height={1467}
+        className="w-full"
+        loading="eager"
+        fetchPriority="high"
+      />
+      {/* White wordmark pinned to the bottom of the film still, spanning the
+          full width like the reference. Decorative — the nav carries the brand
+          name — so empty alt. The SVG is 1309×341, so width alone sets height. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/media/madbunny-submark-white.svg"
+        alt=""
+        width={1309}
+        height={341}
+        className="pointer-events-none absolute inset-x-0 bottom-0 w-full md:px-12"
+        loading="eager"
+      />
+    </div>
+  );
+}
+
+// Section header row, reference-style: bold uppercase title on the left, an
+// optional bold link pinned right ("SHOP ALL" in the reference).
+function SectionHeader({ title, link }: { title: React.ReactNode; link?: { href: string; label: string } }) {
+  return (
+    <div className="flex items-baseline justify-between px-6 md:px-12">
+      <h2 className="font-sans text-[10.4px] font-bold uppercase tracking-wide text-black md:text-[13px]">
+        {title}
+      </h2>
+      {link && (
+        <Link
+          href={link.href}
+          className="font-sans text-[10.4px] font-bold uppercase tracking-wide text-black underline-offset-4 hover:underline md:text-[13px]"
+        >
+          {link.label}
+        </Link>
+      )}
+    </div>
+  );
+}
+
+// Toys and apparel as separate category sections. The section ids are anchor
+// targets for the nav's Shop dropdown; scroll-mt clears the sticky header.
+// Home is the shop index, so "Shop all" resolves here.
+async function Shop() {
+  const products = await getAllProducts();
+  const toys = toGridCards(
+    products.filter((p) => p.tags.includes(TAG.toy)),
+    { basePath: "/shop" },
+  );
+  const wear = toGridCards(
+    products.filter((p) => p.tags.includes(TAG.apparel)),
+    { basePath: "/shop" },
+  );
+
+  if (toys.length === 0 && wear.length === 0) {
+    return (
+      <p className="py-24 text-center font-mono text-[11px] text-gun-metal">
+        No pieces available.
+      </p>
+    );
+  }
+
+  return (
+    <>
+      {toys.length > 0 && (
+        <section id="hello-world" className="scroll-mt-20 pt-[29px] md:pt-[38px]">
+          <SectionHeader
+            title={<>&ldquo;Hello, World&rdquo; collection</>}
+            link={{ href: "/helloworldcollection", label: "Shop all" }}
+          />
+          <div className="mt-12 md:mt-16">
+            <MuseumGrid cards={toys} />
           </div>
-        </div>
-        <div className="space-y-0.5 text-right">
-          <div>Seoul, KR</div>
-          <div className="text-gun-metal">
-            <ZoneClock timeZone={ZONE.seoul} />
+        </section>
+      )}
+      {wear.length > 0 && (
+        <section id="apparel" className="scroll-mt-20 pt-[34px] md:pt-12">
+          <SectionHeader title="Apparel" link={{ href: "/apparel", label: "Shop all" }} />
+          <div className="mt-12 md:mt-16">
+            <MuseumGrid cards={wear} />
           </div>
-        </div>
+        </section>
+      )}
+    </>
+  );
+}
+
+// Full-bleed black-and-white diptych between apparel and the collection — the
+// one photographic break in the white gallery. Converted from the source PNG to
+// WebP (2.99MB → 192KB) at the same 2560 width as the campaign banner.
+function CollectorsBand() {
+  return (
+    <section className="mt-[34px] md:mt-12">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/media/left-right.webp"
+        alt="Two collectors on a couch with Madbunny figures, beside a signed figure in close-up"
+        width={2560}
+        height={1417}
+        className="w-full"
+        loading="lazy"
+      />
+    </section>
+  );
+}
+
+async function PrivateCollection() {
+  const works = (await getAllProducts()).filter(isFineArt);
+  const cards = toGridCards(works, { basePath: "/private-collection" });
+  if (cards.length === 0) return null;
+
+  return (
+    <section className="pt-[34px] md:pt-12">
+      <SectionHeader
+        title="Private Collection"
+        link={{ href: "/private-collection", label: "Shop all" }}
+      />
+      <div className="mt-12 md:mt-16">
+        <MuseumGrid cards={cards} />
       </div>
+    </section>
+  );
+}
 
-      <Link href="/collectibles" aria-label="Enter the shop" className="peer">
-        <HeroBunny className="w-[69vw] max-w-[506px]" />
-      </Link>
+// Brand banner: the landing film on silent loop with the story statement over
+// it. Whole banner links to /studio. Under prefers-reduced-motion the poster
+// frame stands in for the video (house pattern).
+function StoryTeaser() {
+  return (
+    <section className="mt-[34px] md:mt-12">
+      <Link href="/studio" className="group relative block">
+        {/* bg-black, not bg-card: the section abuts the black footer, and at
+            fractional layout heights the video can leave a subpixel row of the
+            well exposed — light gray there reads as a hairline seam. */}
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-black sm:aspect-[1920/1012]">
+          <video
+            className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
+            poster="/media/brand-landing-poster.webp"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          >
+            <source src="/media/brand-landing.webm" type="video/webm" />
+            <source src="/media/brand-landing.mp4" type="video/mp4" />
+          </video>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/media/brand-landing-poster.webp"
+            alt=""
+            className="absolute inset-0 hidden h-full w-full object-cover motion-reduce:block"
+          />
 
-      {/* Gray at rest; blinks black while the plate is hovered (peer). Direct
-          hover on the text itself just goes solid black. */}
-      <Link
-        href="/collectibles"
-        className="mt-8 font-bebas text-xl uppercase tracking-normal text-gun-metal transition-colors hover:text-black peer-hover:animate-enter-blink peer-hover:text-black motion-reduce:animate-none"
-      >
-        [Click to enter]
+          {/* Scrim so the copy holds over any frame of the film. Label sits
+              top-left, so the gradient runs from the top. */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/10 to-transparent"
+          />
+
+          <div className="absolute inset-x-0 top-0 px-6 pt-8 md:px-12 md:pt-10">
+            {/* Hover lights the label rather than underlining it — a text-shadow
+                glow reads as film chrome, and drops out under reduced motion. */}
+            <span className="inline-block font-sans text-[11px] font-bold uppercase tracking-[0.125em] text-bunny-white transition-[text-shadow] duration-300 group-hover:[text-shadow:0_0_12px_rgba(255,255,255,0.9),0_0_28px_rgba(255,255,255,0.55)] motion-reduce:transition-none">
+              In the studio
+            </span>
+          </div>
+        </div>
       </Link>
-    </main>
+    </section>
   );
 }

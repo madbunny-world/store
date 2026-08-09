@@ -1,0 +1,68 @@
+import type { Metadata } from "next";
+import { notFound, permanentRedirect } from "next/navigation";
+import { getAllProducts, getProductBySlug } from "@/lib/shopify/queries";
+import { isFineArt, relatedProducts, TAG } from "@/lib/catalog";
+import { toGridCards } from "@/lib/cards";
+import { slugify } from "@/lib/slug";
+import ProductDetail from "@/components/ProductDetail";
+import RelatedProducts from "@/components/RelatedProducts";
+
+type Params = { handle: string };
+type Search = { variant?: string };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<Params>;
+}): Promise<Metadata> {
+  const { handle } = await params;
+  const product = await getProductBySlug(handle);
+  if (!product) return {};
+  const image = product.featuredImage?.url;
+  return {
+    title: product.title,
+    description: `${product.title}. ${product.tier ?? ""}`.trim(),
+    openGraph: {
+      title: product.title,
+      images: image ? [{ url: image }] : undefined,
+    },
+  };
+}
+
+// Unified buyable PDP — toys and apparel share it. Apparel gates Add to cart on
+// option selection; fine art doesn't belong here and heals to its collection URL.
+export default async function ShopProductPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<Params>;
+  searchParams: Promise<Search>;
+}) {
+  const { handle } = await params;
+  const { variant } = await searchParams;
+  const product = await getProductBySlug(handle);
+  if (!product) notFound();
+
+  if (isFineArt(product)) {
+    permanentRedirect(`/private-collection/${slugify(product.handle)}`);
+  }
+
+  const apparel = product.tags.includes(TAG.apparel);
+  // Suggestions never cross into fine art — the collection is reached
+  // deliberately, not cross-sold into the cart flow.
+  const pool = (await getAllProducts()).filter((p) => !isFineArt(p));
+  const suggestions = toGridCards(relatedProducts(pool, product), {
+    basePath: "/shop",
+  });
+
+  return (
+    <main className="flex-1 px-4 py-10 sm:px-6">
+      <ProductDetail
+        product={product}
+        initialVariantId={variant}
+        requireVariantSelection={apparel}
+      />
+      <RelatedProducts cards={suggestions} fit={apparel ? "cover" : "contain"} />
+    </main>
+  );
+}

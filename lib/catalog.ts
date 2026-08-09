@@ -22,3 +22,36 @@ export function collectibles(products: Product[]): Product[] {
 export function apparel(products: Product[]): Product[] {
   return products.filter((p) => p.tags.includes(TAG.apparel));
 }
+
+/** Everything that goes through the cart — toys first, then apparel. Fine art
+ *  is inquiry-only and deliberately excluded (it lives in /private-collection). */
+export function buyables(products: Product[]): Product[] {
+  const toys = products.filter((p) => p.tags.includes(TAG.toy));
+  const wear = products.filter((p) => p.tags.includes(TAG.apparel));
+  return [...toys, ...wear];
+}
+
+/** Which of the three groups a product belongs to. Apparel wins if double-tagged. */
+function group(p: Product): string {
+  if (p.tags.includes(TAG.apparel)) return TAG.apparel;
+  if (p.tags.includes(TAG.fineArt)) return TAG.fineArt;
+  return TAG.toy;
+}
+
+/**
+ * Suggestions for the "You may also like" row: same group first (a toy suggests
+ * toys, a painting suggests paintings), then the rest of the pool. The CALLER
+ * scopes the pool — shop PDPs pass buyables only, collection PDPs pass fine art
+ * only — so cart items and inquiry-only works never cross-suggest.
+ */
+export function relatedProducts(
+  pool: Product[],
+  current: Product,
+  limit = 4,
+): Product[] {
+  const rest = pool.filter((p) => p.id !== current.id);
+  const currentGroup = group(current);
+  const sameGroup = rest.filter((p) => group(p) === currentGroup);
+  const others = rest.filter((p) => group(p) !== currentGroup);
+  return [...sameGroup, ...others].slice(0, limit);
+}

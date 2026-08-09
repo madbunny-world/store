@@ -236,7 +236,7 @@ export default function BuyPanel({
 
       {!fineArt && (
         <p className="mt-2.5 font-sans text-[12px] font-medium text-[#909090]">
-          Free shipping on orders over $100. Fine art collections excluded.
+          Free shipping on orders over $100. Private collections excluded.
         </p>
       )}
 

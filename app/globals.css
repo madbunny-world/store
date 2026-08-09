@@ -21,9 +21,63 @@
   /* Body copy: Helvetica Neue system stack. */
   --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-  /* Theme animation token so the blinker composes with variants
-     (peer-hover:animate-enter-blink). Keyframes defined below. */
-  --animate-enter-blink: enter-blink 2.4s linear infinite;
+}
+
+/* Entrance intro (home): the metal plate catches the light — an overshoot-and-
+   settle Y-sweep on white, then the overlay fades into the (white) store.
+   Plays on every arrival at /: hard loads are armed pre-paint by an inline
+   script setting data-intro="play" (full ~2s cut), client-side navigations by
+   IntroGate on mount as data-intro="quick" (~1s cut so mid-shopping returns
+   stay light). Without JS (or under reduced motion) the overlay never appears. */
+@keyframes intro-twist {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateY(-32deg) rotateX(8deg) scale(0.88);
+  }
+  60% {
+    opacity: 1;
+    transform: perspective(900px) rotateY(14deg) rotateX(-3deg) scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(900px) rotateY(0deg) rotateX(0deg) scale(1);
+  }
+}
+#intro-gate {
+  display: none;
+}
+html[data-intro] #intro-gate {
+  display: flex;
+}
+html[data-intro] #intro-gate .intro-plate {
+  animation: intro-twist 1.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+html[data-intro="quick"] #intro-gate .intro-plate {
+  animation-duration: 0.7s;
+}
+@media (prefers-reduced-motion: reduce) {
+  #intro-gate {
+    display: none !important;
+  }
+}
+
+/* Announcement marquee — the track holds two identical halves, so a -50%
+   translate loops seamlessly. Duration sets read speed, not distance. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 45s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
 }
 
 /* Blinking clock colon — crisp on/off once per second (added liveliness). */
@@ -36,85 +90,13 @@
   animation: clock-blink 1s step-end infinite;
 }
 
-/* [CLICK TO ENTER] blinker — cadence measured from Gia's reference recording:
-   ~2.4s cycle of dark hold → stuttering flicker-in (neon catching) → bright
-   hold → smooth fade-out. Hover-only: applied via peer-hover on the plate. */
-@keyframes enter-blink {
-  0%,
-  8% {
-    opacity: 0.2;
-  }
-  10% {
-    opacity: 1;
-  }
-  13% {
-    opacity: 0.25;
-  }
-  17% {
-    opacity: 1;
-  }
-  20% {
-    opacity: 0.3;
-  }
-  24%,
-  48% {
-    opacity: 1;
-  }
-  62%,
-  100% {
-    opacity: 0.2;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .animate-clock-blink {
     animation: none;
   }
 }
 
-/* Full-page snapping for /about — one chapter per screen, mandatory snap, no
-   visible scrollbar. AboutStory toggles `about-fullpage` on <html> so this is
-   scoped to that route only. */
-html.about-fullpage {
-  scroll-snap-type: y mandatory;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* legacy Edge */
-}
-html.about-fullpage::-webkit-scrollbar {
-  display: none; /* Chromium / Safari */
-}
-/* Dark theme while the about story is mounted (reference design): near-black
-   page, translucent dark nav with gray links. The footer is hidden entirely so
-   the story ends exactly at the last screen — no extra scroll height. */
-html.about-fullpage body {
-  background: #151312;
-}
-html.about-fullpage header {
-  background: rgba(21, 19, 18, 0.92);
-}
-html.about-fullpage header a,
-html.about-fullpage header button {
-  color: #a7a5a4;
-}
-html.about-fullpage header a:hover,
-html.about-fullpage header button:hover {
-  color: #ffffff;
-  opacity: 1;
-}
-/* Expanded mobile menu follows the dark theme: black panel, white items. */
-html.about-fullpage .mobile-menu-panel {
-  background: #151312;
-}
-html.about-fullpage .mobile-menu-panel a,
-html.about-fullpage .mobile-menu-panel button {
-  color: #fff8f8;
-}
-html.about-fullpage footer {
-  display: none;
-}
-
-/* Subtle float-in on page open — every route except the landing page (its main
-   opts out with data-no-float so the metal-plate interaction stays untouched). */
+/* Subtle float-in on page open (main can opt out with data-no-float). */
 @keyframes page-float-in {
   from {
     opacity: 0;
@@ -133,10 +115,6 @@ main:not([data-no-float]) {
     animation: none;
   }
 }
-
-/* Archive grid (collectibles/apparel). The name sits in its own row under the
-   square image, so it stays readable at rest — the old hover "type on" reveal
-   would leave that row blank. The image keeps its hover zoom (ArchiveGrid). */
 
 html {
   -webkit-text-size-adjust: 100%;

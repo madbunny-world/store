@@ -1,31 +1,16 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getProductBySlug } from "@/lib/shopify/queries";
-import ProductDetail from "@/components/ProductDetail";
+import { isFineArt } from "@/lib/catalog";
+import { slugify } from "@/lib/slug";
 
 type Params = { handle: string };
 type Search = { variant?: string };
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<Params>;
-}): Promise<Metadata> {
-  const { handle } = await params;
-  const product = await getProductBySlug(handle);
-  if (!product) return {};
-  const image = product.featuredImage?.url;
-  return {
-    title: product.title,
-    description: `${product.title}. ${product.tier ?? ""}`.trim(),
-    openGraph: {
-      title: product.title,
-      images: image ? [{ url: image }] : undefined,
-    },
-  };
-}
-
-export default async function ProductPage({
+// v2 → v3 URL healer. Old /collectibles URLs covered both toys (now /shop) and
+// fine art (now /private-collection) — only a catalog lookup can tell them
+// apart, so this can't be a next.config redirect. Keep until old-URL traffic
+// dies. Preserves ?variant= so shared colorway links still preselect.
+export default async function LegacyCollectiblePage({
   params,
   searchParams,
 }: {
@@ -37,9 +22,11 @@ export default async function ProductPage({
   const product = await getProductBySlug(handle);
   if (!product) notFound();
 
-  return (
-    <main className="flex-1 px-4 py-10 sm:px-6">
-      <ProductDetail product={product} initialVariantId={variant} />
-    </main>
+  const slug = slugify(product.handle);
+  const query = variant ? `?variant=${encodeURIComponent(variant)}` : "";
+  permanentRedirect(
+    isFineArt(product)
+      ? `/private-collection/${slug}`
+      : `/shop/${slug}${query}`,
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { X } from "lucide-react";
 import { CTA_BAR_CLASS } from "./BuyPanel";
 
@@ -160,7 +161,7 @@ export default function InquiryDialog({
                 maxLength={254}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
+                placeholder="Email *"
                 className={INPUT_CLASS}
               />
             </div>
@@ -177,7 +178,7 @@ export default function InquiryDialog({
                 maxLength={120}
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Full name"
+                placeholder="Full name *"
                 className={INPUT_CLASS}
               />
             </div>
@@ -194,7 +195,7 @@ export default function InquiryDialog({
                 maxLength={400}
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Address"
+                placeholder="Address *"
                 className={`${INPUT_CLASS} resize-none`}
               />
             </div>
@@ -222,6 +223,22 @@ export default function InquiryDialog({
             >
               {status === "loading" ? "Sending" : "Send inquiry"}
             </button>
+
+            {/* Same grey as the field placeholders. Opens in a new tab so a
+                half-filled form isn't lost to the navigation. */}
+            <p className="mt-3 font-sans text-[11px] leading-relaxed text-gun-metal/70">
+              We collect your information to provide accurate, fully insured
+              delivery quotations for your artwork. Check our{" "}
+              <Link
+                href="/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                privacy notice
+              </Link>
+              .
+            </p>
 
             {message && (
               <p

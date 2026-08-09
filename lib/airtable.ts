@@ -11,7 +11,7 @@ export function hasAirtableEnv(): boolean {
 }
 
 /** Append one subscriber row. The table needs text fields "Email" and "Source". */
-export async function appendSubscriber(email: string, source = "jointheclub"): Promise<void> {
+export async function appendSubscriber(email: string, source = "footer"): Promise<void> {
   if (!hasAirtableEnv()) throw new Error("Airtable not configured");
 
   const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE)}`;

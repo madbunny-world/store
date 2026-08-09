@@ -3,11 +3,12 @@ import { Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
-import FloatingCart from "@/components/cart/FloatingCart";
+import FloatingInstagram from "@/components/FloatingInstagram";
 import { siteUrl } from "@/lib/site";
 
 // Geist Mono: nav, labels, captions, timestamps. OFL, free, self-hosted by next/font.
@@ -46,13 +47,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistMono.variable} ${bebasNeue.variable} h-full`}>
+    // suppressHydrationWarning: the home intro's pre-paint script sets
+    // data-intro on <html> before hydration (theme-switcher pattern) — scoped
+    // to this element's own attributes only.
+    <html
+      lang="en"
+      className={`${geistMono.variable} ${bebasNeue.variable} h-full`}
+      suppressHydrationWarning
+    >
       <body className="min-h-full flex flex-col">
         <CartProvider>
+          {/* Above (not inside) the sticky header: the strip scrolls away, the
+              nav then sticks at the viewport top. */}
+          <AnnouncementBar />
           <Nav />
           {children}
           <Footer />
-          <FloatingCart />
+          <FloatingInstagram />
           <CartDrawer />
         </CartProvider>
         <Analytics />

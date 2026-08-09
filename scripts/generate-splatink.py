@@ -22,10 +22,12 @@ from fontTools.pens.transformPen import TransformPen
 from fontTools.ttLib import TTFont
 
 HEADINGS = {
-    "collectibles": "Collectibles",
+    "madbunny": "Madbunny®",
+    "privateCollection": "Private Collection",
+    "studio": "In the studio",
+    "collectorsLounge": "Collectors Lounge",
+    "helloWorld": "“Hello, world” collection",
     "apparel": "Apparel",
-    "about": "About Madbunny",
-    "joinTheClub": "Join Madclub®",
 }
 
 SIZE = 100  # arbitrary; SVG scales

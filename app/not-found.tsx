@@ -8,8 +8,10 @@ export default function NotFound() {
       <p className="font-mono text-sm uppercase tracking-[0.25em] text-gun-metal">
         404 — Not found
       </p>
+      {/* Sold-out pieces keep their pages (they render a Sold out state), so a
+          404 here means a wrong address, never a sold-out product. */}
       <p className="max-w-sm text-[15px] leading-relaxed text-gun-metal">
-        This page does not exist. It may have sold out, or never existed.
+        This page does not exist. Check the address, or browse the collection.
       </p>
       <Link
         href="/"

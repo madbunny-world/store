@@ -19,9 +19,16 @@ export default function ProductDetail({
   initialVariantId?: string;
   requireVariantSelection?: boolean;
 }) {
-  const collection = product.tags.includes(TAG.apparel)
-    ? { label: "Apparel", href: "/apparel" }
-    : { label: "Collectibles", href: "/collectibles" };
+  // Breadcrumb names the piece's own category page, not the shop root — the
+  // three categories each have a real page now (Gia, 2026-08). Untagged
+  // products fall back to the shop index rather than guessing a category.
+  const collection = product.tags.includes(TAG.fineArt)
+    ? { label: "Private Collection", href: "/private-collection" }
+    : product.tags.includes(TAG.apparel)
+      ? { label: "Apparel", href: "/apparel" }
+      : product.tags.includes(TAG.toy)
+        ? { label: "“Hello, world” collection", href: "/helloworldcollection" }
+        : { label: "Shop", href: "/" };
 
   return (
     <div>
