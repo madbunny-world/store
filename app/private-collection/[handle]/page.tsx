@@ -6,6 +6,8 @@ import { toGridCards } from "@/lib/cards";
 import { slugify } from "@/lib/slug";
 import ProductDetail from "@/components/ProductDetail";
 import RelatedProducts from "@/components/RelatedProducts";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd, metaDescription, productJsonLd } from "@/lib/seo";
 
 type Params = { handle: string };
 
@@ -20,9 +22,14 @@ export async function generateMetadata({
   const image = product.featuredImage?.url;
   return {
     title: product.title,
-    description: `${product.title}. ${product.tier ?? ""}`.trim(),
+    description: metaDescription(product),
+    alternates: {
+      canonical: `/private-collection/${slugify(product.handle)}`,
+    },
     openGraph: {
       title: product.title,
+      description: metaDescription(product),
+      type: "website",
       images: image ? [{ url: image }] : undefined,
     },
   };
@@ -51,6 +58,17 @@ export default async function PrivateCollectionWorkPage({
 
   return (
     <main className="flex-1 px-4 py-10 sm:px-6">
+      <JsonLd data={productJsonLd(product)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Madbunny", path: "/" },
+          { name: "Private Collection", path: "/private-collection" },
+          {
+            name: product.title,
+            path: `/private-collection/${slugify(product.handle)}`,
+          },
+        ])}
+      />
       <ProductDetail product={product} />
       <RelatedProducts cards={suggestions} heading="From the collection" />
     </main>

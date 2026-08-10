@@ -29,6 +29,16 @@ const CARD = {
   single: "w-full",
 };
 
+const SIZES = {
+  carousel: "(max-width: 640px) 62vw, (max-width: 768px) 42vw, 25vw",
+  single: "(max-width: 768px) 100vw, 25vw",
+};
+
+// Both layers share the lift so the swap is pure opacity on the top image —
+// nothing shifts underneath it mid-transition.
+const IMAGE_CLASS =
+  "object-cover transition-[transform,opacity] duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]";
+
 export default function MuseumGrid({
   cards,
   mobile = "carousel",
@@ -55,12 +65,22 @@ export default function MuseumGrid({
                   src={card.image.url}
                   alt={card.image.altText ?? card.title}
                   fill
-                  sizes={
-                    mobile === "single"
-                      ? "(max-width: 768px) 100vw, 25vw"
-                      : "(max-width: 640px) 62vw, (max-width: 768px) 42vw, 25vw"
-                  }
-                  className="object-cover transition-transform duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
+                  sizes={SIZES[mobile]}
+                  className={IMAGE_CLASS}
+                />
+              )}
+              {/* Second shot fades in ON TOP; the base never fades out, so the
+                  white well is never visible between them (that read as a
+                  flicker). Decorative — the first image already names the piece
+                  — so empty alt. Never shown on touch, where there is no
+                  hover. */}
+              {card.hoverImage && (
+                <Image
+                  src={card.hoverImage.url}
+                  alt=""
+                  fill
+                  sizes={SIZES[mobile]}
+                  className={`${IMAGE_CLASS} opacity-0 group-hover:opacity-100`}
                 />
               )}
               {soldOut && (

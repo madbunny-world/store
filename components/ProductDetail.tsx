@@ -5,8 +5,8 @@ import BuyPanel from "./BuyPanel";
 import DetailSections from "./DetailSections";
 import ProductGallery from "./ProductGallery";
 
-// Shared by the modal (@modal/(.)[handle]) and the full page ([handle]) — both
-// render this from the same data. Reference layout: breadcrumb top-left, gallery
+// The full product page ([handle]) for both buyables and fine art — the same
+// data, one branch on tags. Reference layout: breadcrumb top-left, gallery
 // left (chevrons + progress line), info right — bold title, subtitle, options,
 // CTA bar with price, then metafield-driven disclosure sections. Static
 // product-level info here; variant-driven bits live in the client BuyPanel.
@@ -47,9 +47,11 @@ export default function ProductDetail({
 
         {/* Info */}
         <div>
-          <h2 className="font-sans text-[16px] font-bold leading-tight md:text-[18px]">
+          {/* h1, not h2: this is the page's subject. The modal that once shared
+              this component is gone, so it is always the top-level heading. */}
+          <h1 className="font-sans text-[16px] font-bold leading-tight md:text-[18px]">
             {product.title}
-          </h2>
+          </h1>
           {/* Item description (Shopify product info), directly under the title —
               small bold (reference: "100% Cotton - White"). */}
           {product.descriptionHtml && (

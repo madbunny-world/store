@@ -7,6 +7,7 @@ import CollectionPage from "@/components/CollectionPage";
 export const metadata: Metadata = {
   title: "Private Collection",
   description: "Madbunny fine art. Acquired by inquiry.",
+  alternates: { canonical: "/private-collection" },
 };
 
 // Same shape as the other category pages (Gia, 2026-08): centered Splatink

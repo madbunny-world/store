@@ -6,6 +6,8 @@ import { toGridCards } from "@/lib/cards";
 import { slugify } from "@/lib/slug";
 import ProductDetail from "@/components/ProductDetail";
 import RelatedProducts from "@/components/RelatedProducts";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd, metaDescription, productJsonLd } from "@/lib/seo";
 
 type Params = { handle: string };
 type Search = { variant?: string };
@@ -21,9 +23,14 @@ export async function generateMetadata({
   const image = product.featuredImage?.url;
   return {
     title: product.title,
-    description: `${product.title}. ${product.tier ?? ""}`.trim(),
+    description: metaDescription(product),
+    // Canonical drops ?variant= — colorways are separate products here, so a
+    // variant URL is the same page, not a distinct one.
+    alternates: { canonical: `/shop/${slugify(product.handle)}` },
     openGraph: {
       title: product.title,
+      description: metaDescription(product),
+      type: "website",
       images: image ? [{ url: image }] : undefined,
     },
   };
@@ -55,14 +62,26 @@ export default async function ShopProductPage({
     basePath: "/shop",
   });
 
+  const category = apparel
+    ? { name: "Apparel", path: "/apparel" }
+    : { name: "“Hello, world” collection", path: "/helloworldcollection" };
+
   return (
     <main className="flex-1 px-4 py-10 sm:px-6">
+      <JsonLd data={productJsonLd(product)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Madbunny", path: "/" },
+          category,
+          { name: product.title, path: `/shop/${slugify(product.handle)}` },
+        ])}
+      />
       <ProductDetail
         product={product}
         initialVariantId={variant}
         requireVariantSelection={apparel}
       />
-      <RelatedProducts cards={suggestions} fit={apparel ? "cover" : "contain"} />
+      <RelatedProducts cards={suggestions} />
     </main>
   );
 }

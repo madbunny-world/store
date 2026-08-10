@@ -8,6 +8,7 @@ import MuseumGrid from "@/components/MuseumGrid";
 export const metadata: Metadata = {
   title: "Orders",
   description: "Track your Madbunny order.",
+  alternates: { canonical: "/orders" },
 };
 
 // Stateless by design: checkout is Shopify-hosted and cross-domain, so the app

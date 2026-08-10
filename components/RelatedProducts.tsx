@@ -6,14 +6,15 @@ import { formatMoney } from "@/lib/money";
 // "You may also like" row under the product detail. Deliberately lighter than
 // the catalog grids — no (NN) index, since numbering a suggestion set would
 // read as a position in the collection. Image well, name, price.
+// Both layers share the lift so the swap is pure opacity on the top image.
+const imageClass =
+  "transition-[transform,opacity] duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105";
+
 export default function RelatedProducts({
   cards,
-  fit = "contain",
   heading = "You may also like",
 }: {
   cards: GridCard[];
-  /** contain = product cutouts (toys/art); cover = full-bleed photos (apparel). */
-  fit?: "contain" | "cover";
   heading?: string;
 }) {
   if (cards.length === 0) return null;
@@ -33,16 +34,28 @@ export default function RelatedProducts({
           const soldOut = !card.fineArt && !card.available;
           return (
             <Link key={card.key} href={card.href} prefetch className="group block">
-              <div className="relative aspect-square w-full overflow-hidden bg-card">
+              {/* object-cover on white, exactly like the catalog grids —
+                  object-contain letterboxed the cutouts and left the gray well
+                  showing (Gia, 2026-08). */}
+              <div className="relative aspect-square w-full overflow-hidden bg-white">
                 {card.image && (
                   <Image
                     src={card.image.url}
                     alt={card.image.altText ?? card.title}
                     fill
                     sizes="(max-width: 768px) 50vw, 25vw"
-                    className={`transition-transform duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105 ${
-                      fit === "cover" ? "object-cover" : "object-contain"
-                    }`}
+                    className={`${imageClass} object-cover`}
+                  />
+                )}
+                {/* Second shot fades in ON TOP; the base never fades out, so no
+                    translucent frame between them. Same rule as the grids. */}
+                {card.hoverImage && (
+                  <Image
+                    src={card.hoverImage.url}
+                    alt=""
+                    fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    className={`${imageClass} object-cover opacity-0 group-hover:opacity-100`}
                   />
                 )}
                 {soldOut && (

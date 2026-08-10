@@ -47,18 +47,25 @@ function CampaignBanner() {
         loading="eager"
         fetchPriority="high"
       />
-      {/* White wordmark pinned to the bottom of the film still, spanning the
-          full width like the reference. Decorative — the nav carries the brand
-          name — so empty alt. The SVG is 1309×341, so width alone sets height. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/media/madbunny-submark-white.svg"
-        alt=""
-        width={1309}
-        height={341}
-        className="pointer-events-none absolute inset-x-0 bottom-0 w-full md:px-12"
-        loading="eager"
-      />
+      {/* The wordmark IS the page title, so it carries the h1 — with the words
+          as real text for crawlers and screen readers, and the artwork marked
+          decorative (Gia, 2026-08 — SEO; home had no h1 at all). The SVG is
+          1309×341, so width alone sets height. */}
+      <h1 className="pointer-events-none absolute inset-x-0 bottom-0 w-full md:px-12">
+        <span className="sr-only">
+          Madbunny official store. Madbunny is a lifestyle brand symbolizing
+          &ldquo;crazy people who change the world&rdquo;.
+        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/media/madbunny-submark-white.svg"
+          alt=""
+          width={1309}
+          height={341}
+          className="w-full"
+          loading="eager"
+        />
+      </h1>
     </div>
   );
 }

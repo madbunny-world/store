@@ -5,23 +5,24 @@ export const metadata: Metadata = {
   title: "Terms and conditions",
   description:
     "The terms that cover buying from Madbunny and using madbunny.world.",
+  alternates: { canonical: "/terms" },
 };
 
 const EMAIL = "world.madbunny@gmail.com";
 
-// ⚠️ Drafted in-house, not reviewed by a lawyer. Three points below are Gia's
-// business decisions and were written as sensible defaults — confirm before
-// relying on them: the returns window, the governing-law state, and the legal
-// entity name.
+// ⚠️ Drafted in-house, not reviewed by a lawyer. The 14-day returns window is
+// confirmed (Gia, 2026-08) and is the governing figure — /returns states the
+// same, and the two must stay in step. Still unconfirmed: the governing-law
+// state (Michigan). The legal entity is Madbunny LLC, per the return policy.
 export default function TermsPage() {
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-24 pt-16 sm:px-6">
-      <h1 className="text-2xl font-semibold">Madbunny Terms and Conditions</h1>
-      <p className="mt-2 font-mono text-[11px] uppercase tracking-wider text-gun-metal">
+      <h1 className="text-[22px] font-semibold">Madbunny Terms and Conditions</h1>
+      <p className="mt-2 font-mono text-[9px] uppercase tracking-wider text-gun-metal">
         Effective: August 7, 2026
       </p>
 
-      <div className="mt-10 space-y-6 text-[15px] leading-relaxed text-gun-metal [&_strong]:text-black">
+      <div className="mt-10 space-y-6 text-[13px] leading-relaxed text-gun-metal [&_strong]:text-black">
         <p>
           These terms cover madbunny.world and anything you buy from us. Using
           the site or placing an order means you accept them.
@@ -60,10 +61,12 @@ export default function TermsPage() {
         </p>
         <p>
           <strong>Returns.</strong> Unopened pieces can be returned within 14
-          days of delivery for a refund, less return shipping. Opened or used
-          pieces and all private collection works are final sale. Email us before
+          days of delivery for a refund. Return shipping is a flat $5: we send a
+          prepaid label and deduct the $5 from your refund. Opened or used pieces
+          and all private collection works are final sale. Email us before
           sending anything back. Damaged or incorrect items are on us — tell us
-          within 14 days and we will replace or refund.
+          within 14 days and we will replace or refund, and return shipping is
+          free.
         </p>
         <p>
           <strong>Private collection inquiries.</strong> Fine art is not sold

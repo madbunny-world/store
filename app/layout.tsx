@@ -10,6 +10,8 @@ import { CartProvider } from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
 import FloatingInstagram from "@/components/FloatingInstagram";
 import { siteUrl } from "@/lib/site";
+import { organizationJsonLd } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 // Geist Mono: nav, labels, captions, timestamps. OFL, free, self-hosted by next/font.
 const geistMono = Geist_Mono({
@@ -34,6 +36,10 @@ export const metadata: Metadata = {
   },
   description:
     "Madbunny. A character-IP drop brand — collectible figures, apparel, and fine art. Available in limited numbers.",
+  // Root canonical. Each route overrides it with its own path; without this a
+  // page reached with a query string (?variant=…) can be indexed as a separate
+  // duplicate of the same product.
+  alternates: { canonical: "/" },
   openGraph: {
     siteName: "Madbunny",
     type: "website",
@@ -66,6 +72,8 @@ export default function RootLayout({
           <FloatingInstagram />
           <CartDrawer />
         </CartProvider>
+        {/* Site-wide Organization + WebSite schema, once per page. */}
+        <JsonLd data={organizationJsonLd()} />
         <Analytics />
       </body>
     </html>

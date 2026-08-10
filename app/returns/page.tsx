@@ -3,14 +3,16 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Return policy",
   description: "How to return or exchange a Madbunny order.",
+  alternates: { canonical: "/returns" },
 };
 
 const EMAIL = "world.madbunny@gmail.com";
 const ADDRESS = "Madbunny LLC, 8233 John R st, Detroit MI 48202, United States";
 
-// Copy supplied by Gia (madbunny-vault/Policies/Return Policy.md, 2026-08-08).
-// ⚠️ The window here (30 days) contradicts the Terms page (14 days) — flagged to
-// Gia; whichever is right needs changing in both places.
+// Copy supplied by Gia (madbunny-vault/Policies/Return Policy.md, 2026-08-08),
+// with the return window changed from 30 to 14 days (Gia, 2026-08) so it agrees
+// with the Terms page. 14 days is now the single governing window — if it ever
+// changes, it has to change on /terms too.
 function Mail() {
   return (
     <a href={`mailto:${EMAIL}`} className="text-black underline">
@@ -22,14 +24,14 @@ function Mail() {
 export default function ReturnsPage() {
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-24 pt-16 sm:px-6">
-      <h1 className="text-2xl font-semibold">Return policy</h1>
-      <p className="mt-2 font-mono text-[11px] uppercase tracking-wider text-gun-metal">
+      <h1 className="text-[22px] font-semibold">Return policy</h1>
+      <p className="mt-2 font-mono text-[9px] uppercase tracking-wider text-gun-metal">
         Effective: August 8, 2026
       </p>
 
-      <div className="mt-10 space-y-6 text-[15px] leading-relaxed text-gun-metal [&_strong]:text-black">
+      <div className="mt-10 space-y-6 text-[13px] leading-relaxed text-gun-metal [&_strong]:text-black">
         <p>
-          We have a 30-day return policy, which means you have 30 days after
+          We have a 14-day return policy, which means you have 14 days after
           receiving your item to request a return.
         </p>
         <p>
@@ -37,15 +39,11 @@ export default function ReturnsPage() {
           that you received it, unworn or unused, with tags, and in its original
           packaging. You&rsquo;ll also need the receipt or proof of purchase.
         </p>
-        <p>
-          To start a return, you can contact us at <Mail />. Please note that
-          returns will need to be sent to the following address: 8233 John R st,
-          Detroit MI 48202.
-        </p>
+        <p>To start a return, contact us at <Mail />.</p>
         <p>
           If your return is accepted, we&rsquo;ll send you a return shipping
-          label, as well as instructions on how and where to send your package.
-          Items sent back to us without first requesting a return will not be
+          label with instructions on how and where to send your package. Items
+          sent back to us without first requesting a return will not be
           accepted.
         </p>
         <p>
@@ -75,8 +73,8 @@ export default function ReturnsPage() {
               drops the space after </strong> when the paragraph contains an
               HTML entity (&rsquo; below). Same for the three paragraphs after. */}
           <strong>Returns.</strong>{" "}
-          Our policy lasts 30 days. If 30 days have
-          gone by since your purchase, unfortunately we can&rsquo;t offer you a
+          Our policy lasts 14 days. If 14 days have
+          gone by since delivery, unfortunately we can&rsquo;t offer you a
           refund or exchange.
         </p>
         <p>
@@ -99,20 +97,13 @@ export default function ReturnsPage() {
           product to reach you may vary.
         </p>
         <p>
-          <strong>Shipping.</strong> To return your product, you should mail your
-          product to: {ADDRESS}.
+          <strong>Return shipping.</strong> Return shipping is a flat $5. Once
+          your return is accepted we send you a prepaid, tracked label with
+          instructions, and the $5 is deducted from your final refund. There is
+          nothing to arrange and nothing to pay up front. Damaged or incorrect
+          items ship back free.
         </p>
-        <p>
-          You will be responsible for paying for your own shipping costs for
-          returning your item. Shipping costs are non-refundable. If you receive
-          a refund, the cost of return shipping will be deducted from your
-          refund.
-        </p>
-        <p>
-          If you are shipping an item over $75, you should consider using a
-          trackable shipping service or purchasing shipping insurance. We
-          don&rsquo;t guarantee that we will receive your returned item.
-        </p>
+        <p>Returns are addressed to: {ADDRESS}.</p>
         <p>
           <strong>Gifts.</strong>{" "}
           If the item was marked as a gift when purchased
@@ -135,15 +126,6 @@ export default function ReturnsPage() {
           processing time before a refund is posted. If you&rsquo;ve done all of
           this and you still have not received your refund yet, please contact us
           at <Mail />.
-        </p>
-        <p>
-          <strong>European Union 14 day cooling off period.</strong>{" "}
-          Notwithstanding the above, if the merchandise is being shipped into the
-          European Union, you have the right to cancel or return your order
-          within 14 days, for any reason and without a justification. As above,
-          your item must be in the same condition that you received it, unworn or
-          unused, with tags, and in its original packaging. You&rsquo;ll also
-          need the receipt or proof of purchase.
         </p>
         <p>
           <strong>Additional non-returnable items.</strong> Gift cards,

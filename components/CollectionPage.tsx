@@ -16,7 +16,7 @@ export default function CollectionPage({
 }) {
   return (
     <main className="flex-1 pb-24">
-      <div className="flex flex-col items-center px-6 pt-10 text-center md:pt-14">
+      <div className="flex flex-col items-center px-6 pt-6 text-center md:pt-[34px]">
         <SplatinkHeading name={title} className="h-10 sm:h-11" />
       </div>
 

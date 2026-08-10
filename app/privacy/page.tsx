@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy notice",
   description: "How Madbunny handles the email address you share when you sign up.",
+  alternates: { canonical: "/privacy" },
 };
 
 const EMAIL = "world.madbunny@gmail.com";
@@ -10,12 +11,12 @@ const EMAIL = "world.madbunny@gmail.com";
 export default function PrivacyPage() {
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-24 pt-16 sm:px-6">
-      <h1 className="text-2xl font-semibold">Madbunny Privacy Notice</h1>
-      <p className="mt-2 font-mono text-[11px] uppercase tracking-wider text-gun-metal">
+      <h1 className="text-[22px] font-semibold">Madbunny Privacy Notice</h1>
+      <p className="mt-2 font-mono text-[9px] uppercase tracking-wider text-gun-metal">
         Effective: July 21, 2026
       </p>
 
-      <div className="mt-10 space-y-6 text-[15px] leading-relaxed text-gun-metal [&_strong]:text-black">
+      <div className="mt-10 space-y-6 text-[13px] leading-relaxed text-gun-metal [&_strong]:text-black">
         <p>
           Madbunny collects your email address when you sign up on our site. We use
           it for one thing: to send updates about drops, releases, and news.

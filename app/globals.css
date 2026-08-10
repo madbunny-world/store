@@ -120,6 +120,14 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Smooth in-page jumps (#madclub from the announcement bar, the Shop dropdown's
+   section anchors). Guarded like every other motion on the site. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 body {
   background: #ffffff;
   color: var(--color-black);

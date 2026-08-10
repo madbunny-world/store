@@ -22,6 +22,8 @@ export type GridCard = {
   dimensionsMetric: string | null;
   dimensionsIn: string | null;
   image: { url: string; altText: string | null } | null;
+  /** Second shot, revealed on hover. Null when the piece has only one image. */
+  hoverImage: { url: string; altText: string | null } | null;
   available: boolean;
   /** Stock remaining (variant or product total); null when untracked. */
   quantityAvailable: number | null;
@@ -38,7 +40,15 @@ function baseCard(
   p: Product,
 ): Omit<
   GridCard,
-  "key" | "href" | "medium" | "image" | "available" | "quantityAvailable" | "price" | "fineArt"
+  | "key"
+  | "href"
+  | "medium"
+  | "image"
+  | "hoverImage"
+  | "available"
+  | "quantityAvailable"
+  | "price"
+  | "fineArt"
 > {
   return {
     title: p.title,
@@ -48,13 +58,20 @@ function baseCard(
   };
 }
 
+/** The first image that isn't the one already showing — the hover reveal. */
+function secondImage(p: Product, shown: Product["featuredImage"]) {
+  return p.images.find((img) => img.url !== shown?.url) ?? null;
+}
+
 function variantCard(p: Product, v: ProductVariant, basePath: string): GridCard {
+  const image = v.image ?? p.featuredImage;
   return {
     ...baseCard(p),
     key: v.id,
     href: `${basePath}/${slugify(p.handle)}?variant=${encodeURIComponent(v.id)}`,
     medium: v.medium,
-    image: v.image ?? p.featuredImage,
+    image,
+    hoverImage: secondImage(p, image),
     available: v.availableForSale,
     quantityAvailable: v.quantityAvailable,
     price: v.price,
@@ -69,6 +86,7 @@ function productCard(p: Product, basePath: string): GridCard {
     href: `${basePath}/${slugify(p.handle)}`,
     medium: p.variants[0]?.medium ?? null,
     image: p.featuredImage,
+    hoverImage: secondImage(p, p.featuredImage),
     available: p.availableForSale,
     quantityAvailable: totalQuantity(p.variants),
     price: p.minPrice,

@@ -45,7 +45,10 @@ export default async function Nav() {
             </Link>
             {/* No left padding: the panel's edge AND its links land on the same
                 24px page gutter as SHOP above them (Gia, 2026-08). */}
-            <div className="absolute left-0 top-full hidden min-w-max flex-col gap-3 bg-white pb-5 pr-8 pt-4 shadow-[0_12px_32px_rgba(0,0,0,0.1)] group-focus-within:flex group-hover:flex">
+            {/* -left-6 pulls the white panel out to the viewport edge (the nav's
+                own px-6 gutter), while pl-6 keeps the links on the 24px gutter
+                line with SHOP above them. */}
+            <div className="absolute -left-6 top-full hidden min-w-max flex-col gap-3 bg-white pb-5 pl-6 pr-8 pt-4 shadow-[0_12px_32px_rgba(0,0,0,0.1)] group-focus-within:flex group-hover:flex">
               <Link href="/helloworldcollection" className={linkClass}>
                 &ldquo;Hello, World&rdquo; collection
               </Link>

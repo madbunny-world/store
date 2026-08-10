@@ -7,6 +7,7 @@ import CollectionPage from "@/components/CollectionPage";
 export const metadata: Metadata = {
   title: "Apparel",
   description: "Madbunny apparel. Tees and caps, cut heavy.",
+  alternates: { canonical: "/apparel" },
 };
 
 // Apparel, as its own page. /apparel/:handle still 308s to /shop/:handle — the

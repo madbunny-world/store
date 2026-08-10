@@ -58,11 +58,18 @@ export default function Footer() {
   const accountUrl = `https://${process.env.SHOPIFY_STORE_DOMAIN}/account`;
 
   return (
-    <footer className="overflow-hidden bg-[#000000] text-bunny-white">
+    // overflow-clip, NOT overflow-hidden: the mark bleeds past the bottom edge,
+    // which makes an overflow-hidden footer a scroll container. The #madclub
+    // anchor scrolls every scrollable ancestor, so it was scrolling the footer
+    // itself by the bleed amount and shifting the whole footer up. `clip` crops
+    // without ever being scrollable.
+    <footer className="overflow-clip bg-[#000000] text-bunny-white">
       <div className="relative px-6 pt-12 md:px-12 md:pt-14">
         <FooterNav groups={groups(accountUrl)} />
 
-        <div className="mt-14 w-full max-w-md md:mt-24">
+        {/* #madclub: the announcement bar's "Sign up for Madclub" jumps here,
+            from any page. scroll-mt clears the sticky header. */}
+        <div id="madclub" className="mt-14 w-full max-w-md scroll-mt-24 md:mt-24">
           <p className="font-sans text-[11px] text-white/45">
             Join Madclub&trade;
           </p>

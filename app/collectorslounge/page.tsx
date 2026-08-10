@@ -6,17 +6,18 @@ import MetalPlate from "@/components/club/MetalPlate";
 export const metadata: Metadata = {
   title: "Collectors lounge",
   description: "Register your Madbunny piece. Members get first access.",
+  alternates: { canonical: "/collectorslounge" },
 };
 
 // White gallery page like the rest of the site (Gia, 2026-08 — the madclub
 // photo backdrop is gone, so the room is no longer dark and the type is black).
-// Title sits at the same pt-10/md:pt-14 as the category pages, then the
+// Title sits at the same top padding as the category pages, then the
 // interactive plate, then the ticket-stub serial input. Serial always rejects
 // in v1 (D-04) with exactly "Not a valid serial."
 export default function CollectorsLoungePage() {
   return (
     <main className="flex-1 pb-24">
-      <div className="flex flex-col items-center px-6 pt-10 text-center md:pt-14">
+      <div className="flex flex-col items-center px-6 pt-6 text-center md:pt-[34px]">
         <SplatinkHeading name="collectorsLounge" className="h-10 sm:h-11" />
         <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.35em] text-mad-red">
           Members only

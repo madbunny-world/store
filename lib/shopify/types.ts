@@ -39,6 +39,8 @@ export type Product = {
   handle: string;
   title: string;
   descriptionHtml: string;
+  /** Plain text; for meta descriptions and structured data. */
+  description: string;
   availableForSale: boolean;
   productType: string;
   tags: string[];

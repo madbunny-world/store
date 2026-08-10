@@ -38,6 +38,9 @@ const PRODUCT_FRAGMENT = `
     handle
     title
     descriptionHtml
+    # Plain-text twin of descriptionHtml — used for meta descriptions and
+    # JSON-LD, where markup would have to be stripped.
+    description
     availableForSale
     productType
     tags
@@ -76,6 +79,7 @@ type RawProduct = {
   handle: string;
   title: string;
   descriptionHtml: string;
+  description: string;
   availableForSale: boolean;
   productType: string;
   tags: string[];
@@ -140,6 +144,7 @@ function normalizeProduct(p: RawProduct): Product {
     handle: p.handle,
     title: p.title,
     descriptionHtml: p.descriptionHtml,
+    description: p.description ?? "",
     availableForSale: p.availableForSale,
     productType: p.productType,
     tags: p.tags,

@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "“Hello, World” collection",
   description:
     "Madbunny Collection 001. Collectible figures in three colorways, available in limited numbers.",
+  alternates: { canonical: "/helloworldcollection" },
 };
 
 // The toys, as their own page. Home still carries the same grid as a section;

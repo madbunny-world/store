@@ -4,6 +4,7 @@ import SplatinkHeading from "@/components/SplatinkHeading";
 export const metadata: Metadata = {
   title: "Studio",
   description: "The founding story of Madbunny — a character-IP drop brand born in a Detroit art studio.",
+  alternates: { canonical: "/studio" },
 };
 
 // One-pager: Splatink title at the same pt-10/md:pt-14 as every other page
@@ -16,7 +17,7 @@ export default function StudioPage() {
     // / 68px desktop) and footer (64px) are fixed, and the film takes whatever
     // height is left over.
     <main className="flex h-[calc(100dvh-111px)] flex-col pb-11 sm:h-[calc(100dvh-132px)]">
-      <div className="flex shrink-0 flex-col items-center px-6 pt-10 text-center md:pt-14">
+      <div className="flex shrink-0 flex-col items-center px-6 pt-6 text-center md:pt-[34px]">
         <SplatinkHeading name="studio" className="h-10 sm:h-11" />
       </div>
 
