@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Product } from "@/lib/shopify/types";
-import { TAG } from "@/lib/catalog";
+import { productCategory } from "@/lib/catalog";
 import BuyPanel from "./BuyPanel";
 import DetailSections from "./DetailSections";
 import ProductGallery from "./ProductGallery";
@@ -19,23 +19,15 @@ export default function ProductDetail({
   initialVariantId?: string;
   requireVariantSelection?: boolean;
 }) {
-  // Breadcrumb names the piece's own category page, not the shop root — the
-  // three categories each have a real page now (Gia, 2026-08). Untagged
-  // products fall back to the shop index rather than guessing a category.
-  const collection = product.tags.includes(TAG.fineArt)
-    ? { label: "Private Collection", href: "/private-collection" }
-    : product.tags.includes(TAG.apparel)
-      ? { label: "Apparel", href: "/apparel" }
-      : product.tags.includes(TAG.toy)
-        ? { label: "“Hello, world” collection", href: "/helloworldcollection" }
-        : { label: "Shop", href: "/" };
+  // Shared with the breadcrumb JSON-LD so the two can never disagree.
+  const collection = productCategory(product);
 
   return (
     <div>
       {/* Breadcrumb — collection / product */}
       <nav aria-label="Breadcrumb" className="font-sans text-[12px] font-bold text-black">
-        <Link href={collection.href} className="transition-opacity hover:opacity-60">
-          {collection.label}
+        <Link href={collection.path} className="transition-opacity hover:opacity-60">
+          {collection.name}
         </Link>
         <span className="mx-1.5 font-normal text-gun-metal">/</span>
         {product.title}

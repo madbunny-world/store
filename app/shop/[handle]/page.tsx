@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getAllProducts, getProductBySlug } from "@/lib/shopify/queries";
-import { isFineArt, relatedProducts, TAG } from "@/lib/catalog";
+import { isFineArt, productCategory, relatedProducts, TAG } from "@/lib/catalog";
 import { toGridCards } from "@/lib/cards";
 import { slugify } from "@/lib/slug";
 import ProductDetail from "@/components/ProductDetail";
@@ -62,17 +62,14 @@ export default async function ShopProductPage({
     basePath: "/shop",
   });
 
-  const category = apparel
-    ? { name: "Apparel", path: "/apparel" }
-    : { name: "“Hello, world” collection", path: "/helloworldcollection" };
-
   return (
     <main className="flex-1 px-4 py-10 sm:px-6">
       <JsonLd data={productJsonLd(product)} />
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Madbunny", path: "/" },
-          category,
+          // Same resolver the visible breadcrumb uses — never hand-rolled here.
+          productCategory(product),
           { name: product.title, path: `/shop/${slugify(product.handle)}` },
         ])}
       />

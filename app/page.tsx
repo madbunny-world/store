@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllProducts } from "@/lib/shopify/queries";
 import { isFineArt, TAG } from "@/lib/catalog";
@@ -10,6 +11,12 @@ import IntroGate from "@/components/intro/IntroGate";
 // quick cut armed by IntroGate itself on mount. No JS → the attribute is never
 // set → no overlay.
 const INTRO_ARM = `try{document.documentElement.setAttribute("data-intro","play")}catch(e){}`;
+
+// Title and description come from the root layout's defaults; only the
+// canonical is declared here (the root no longer sets one — see layout.tsx).
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 // v3 home IS the store: full-bleed campaign banner, the buyable catalog as a
 // museum grid, a Private Collection teaser, a story teaser, then the black

@@ -12,6 +12,25 @@ export function isFineArt(product: Product): boolean {
   return product.tags.includes(TAG.fineArt);
 }
 
+/**
+ * The category page a piece belongs to — the single source for the visible
+ * breadcrumb AND the breadcrumb JSON-LD. They must agree: structured data that
+ * disagrees with what the page shows is a spam signal, and they drifted once
+ * already. Untagged products fall back to the shop index rather than guessing.
+ */
+export function productCategory(product: Product): {
+  name: string;
+  path: string;
+} {
+  if (product.tags.includes(TAG.fineArt))
+    return { name: "Private Collection", path: "/private-collection" };
+  if (product.tags.includes(TAG.apparel))
+    return { name: "Apparel", path: "/apparel" };
+  if (product.tags.includes(TAG.toy))
+    return { name: "“Hello, world” collection", path: "/helloworldcollection" };
+  return { name: "Shop", path: "/" };
+}
+
 /** Collectibles = toys first, then fine-art pieces (store order within each). */
 export function collectibles(products: Product[]): Product[] {
   const toys = products.filter((p) => p.tags.includes(TAG.toy));

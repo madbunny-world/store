@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getAllProducts, getProductBySlug } from "@/lib/shopify/queries";
-import { isFineArt, relatedProducts } from "@/lib/catalog";
+import { isFineArt, productCategory, relatedProducts } from "@/lib/catalog";
 import { toGridCards } from "@/lib/cards";
 import { slugify } from "@/lib/slug";
 import ProductDetail from "@/components/ProductDetail";
@@ -62,7 +62,8 @@ export default async function PrivateCollectionWorkPage({
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Madbunny", path: "/" },
-          { name: "Private Collection", path: "/private-collection" },
+          // Same resolver the visible breadcrumb uses — never hand-rolled here.
+          productCategory(product),
           {
             name: product.title,
             path: `/private-collection/${slugify(product.handle)}`,

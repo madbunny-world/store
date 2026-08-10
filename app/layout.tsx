@@ -36,10 +36,10 @@ export const metadata: Metadata = {
   },
   description:
     "Madbunny. A character-IP drop brand — collectible figures, apparel, and fine art. Available in limited numbers.",
-  // Root canonical. Each route overrides it with its own path; without this a
-  // page reached with a query string (?variant=…) can be indexed as a separate
-  // duplicate of the same product.
-  alternates: { canonical: "/" },
+  // No canonical here on purpose: metadata is inherited, so a root canonical
+  // would make every route that doesn't set its own — notably not-found.tsx and
+  // any missing slug — claim to be the homepage. Each real route declares its
+  // own; a 404 correctly declares none.
   openGraph: {
     siteName: "Madbunny",
     type: "website",
