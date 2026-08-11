@@ -3,7 +3,7 @@ import { getAllProducts } from "@/lib/shopify/queries";
 import { isFineArt } from "@/lib/catalog";
 import { toGridCards } from "@/lib/cards";
 import CollectionPage from "@/components/CollectionPage";
-import { ogImages } from "@/lib/seo";
+import { ogImages, openGraph } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const works = (await getAllProducts()).filter(isFineArt);
@@ -11,10 +11,10 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Private Collection",
     description: "Madbunny fine art. Acquired by inquiry.",
     alternates: { canonical: "/private-collection" },
-    openGraph: {
+    openGraph: openGraph({
       description: "Madbunny’s 1:1 original works, acquired by inquiry.",
       images: ogImages(works, "Madbunny fine art"),
-    },
+    }),
   };
 }
 

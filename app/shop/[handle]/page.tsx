@@ -7,7 +7,12 @@ import { slugify } from "@/lib/slug";
 import ProductDetail from "@/components/ProductDetail";
 import RelatedProducts from "@/components/RelatedProducts";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbJsonLd, metaDescription, productJsonLd } from "@/lib/seo";
+import {
+  breadcrumbJsonLd,
+  metaDescription,
+  openGraph,
+  productJsonLd,
+} from "@/lib/seo";
 
 type Params = { handle: string };
 type Search = { variant?: string };
@@ -27,12 +32,11 @@ export async function generateMetadata({
     // Canonical drops ?variant= — colorways are separate products here, so a
     // variant URL is the same page, not a distinct one.
     alternates: { canonical: `/shop/${slugify(product.handle)}` },
-    openGraph: {
+    openGraph: openGraph({
       title: product.title,
       description: metaDescription(product),
-      type: "website",
-      images: image ? [{ url: image }] : undefined,
-    },
+      images: image ? [{ url: image, alt: product.title }] : undefined,
+    }),
   };
 }
 

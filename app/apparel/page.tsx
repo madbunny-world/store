@@ -3,7 +3,7 @@ import { getAllProducts } from "@/lib/shopify/queries";
 import { TAG } from "@/lib/catalog";
 import { toGridCards } from "@/lib/cards";
 import CollectionPage from "@/components/CollectionPage";
-import { ogImages } from "@/lib/seo";
+import { ogImages, openGraph } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const wear = (await getAllProducts()).filter((p) =>
@@ -13,11 +13,11 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Apparel",
     description: "Madbunny apparel. Tees and caps, cut heavy.",
     alternates: { canonical: "/apparel" },
-    openGraph: {
+    openGraph: openGraph({
       description:
         "Madbunny Tees and caps features short sleeve t-shirts with bold icon.",
       images: ogImages(wear, "Madbunny apparel"),
-    },
+    }),
   };
 }
 

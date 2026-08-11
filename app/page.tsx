@@ -4,6 +4,7 @@ import { getAllProducts } from "@/lib/shopify/queries";
 import { isFineArt, TAG } from "@/lib/catalog";
 import { toGridCards } from "@/lib/cards";
 import MuseumGrid from "@/components/MuseumGrid";
+import { openGraph } from "@/lib/seo";
 import IntroGate from "@/components/intro/IntroGate";
 
 // Arms the entrance intro before first paint on hard loads (full cut). The
@@ -16,14 +17,16 @@ const INTRO_ARM = `try{document.documentElement.setAttribute("data-intro","play"
 // here (the root no longer sets one — see layout.tsx).
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
-  openGraph: {
-    // Separate from the SEO <title> ("Madbunny — Limited drops"): iMessage and
-    // similar rich-link cards render only image + title + domain — no
-    // description — and they drop a leading site-name segment, which reduced
-    // that title to a bare "Limited drops". No brand prefix, no separator, so
-    // it survives intact (Gia, 2026-08).
+  // og title is separate from the SEO <title> ("Madbunny — Limited drops"):
+  // iMessage and similar rich-link cards render only image + title + domain —
+  // no description — and they drop a leading site-name segment, which reduced
+  // that title to a bare "Limited drops". No brand prefix, no separator, so it
+  // survives intact (Gia, 2026-08).
+  openGraph: openGraph({
     title: "Madbunny Official Store",
-  },
+    description:
+      "MADBUNNY OFFICIAL STORE. Madbunny is an iconic lifestyle brand symbolizing “crazy people who change the world”",
+  }),
 };
 
 // v3 home IS the store: full-bleed campaign banner, the buyable catalog as a

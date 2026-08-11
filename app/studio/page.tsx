@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import SplatinkHeading from "@/components/SplatinkHeading";
+import { openGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Studio",
   description: "The founding story of Madbunny — a character-IP drop brand born in a Detroit art studio.",
   alternates: { canonical: "/studio" },
-  openGraph: {
+  openGraph: openGraph({
     description: "Madbunny’s story and Detroit studio",
     images: [
       {
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
         alt: "The Madbunny studio",
       },
     ],
-  },
+  }),
 };
 
 // One-pager: Splatink title at the same pt-10/md:pt-14 as every other page

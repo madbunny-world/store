@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import SplatinkHeading from "@/components/SplatinkHeading";
 import SerialForm from "@/components/club/SerialForm";
 import MetalPlate from "@/components/club/MetalPlate";
+import { openGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Collectors lounge",
   description: "Register your Madbunny piece. Members get first access.",
   alternates: { canonical: "/collectorslounge" },
-  openGraph: {
+  openGraph: openGraph({
     description: "Register your piece. Members get first access to drops.",
     images: [
       {
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
         alt: "Two collectors with Madbunny figures",
       },
     ],
-  },
+  }),
 };
 
 // White gallery page like the rest of the site (Gia, 2026-08 — the madclub
