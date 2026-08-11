@@ -12,10 +12,18 @@ import IntroGate from "@/components/intro/IntroGate";
 // set → no overlay.
 const INTRO_ARM = `try{document.documentElement.setAttribute("data-intro","play")}catch(e){}`;
 
-// Title and description come from the root layout's defaults; only the
-// canonical is declared here (the root no longer sets one — see layout.tsx).
+// Description comes from the root layout's defaults; the canonical is declared
+// here (the root no longer sets one — see layout.tsx).
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
+  openGraph: {
+    // Separate from the SEO <title> ("Madbunny — Limited drops"): iMessage and
+    // similar rich-link cards render only image + title + domain — no
+    // description — and they drop a leading site-name segment, which reduced
+    // that title to a bare "Limited drops". No brand prefix, no separator, so
+    // it survives intact (Gia, 2026-08).
+    title: "Madbunny Official Store",
+  },
 };
 
 // v3 home IS the store: full-bleed campaign banner, the buyable catalog as a
