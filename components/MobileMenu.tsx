@@ -37,7 +37,7 @@ export default function MobileMenu({ accountUrl }: { accountUrl: string }) {
       </button>
 
       {open && (
-        <div className="mobile-menu-panel absolute inset-x-0 top-full bg-white px-4 pb-6 pt-2 font-sans text-[11.7px] font-medium uppercase tracking-wide">
+        <div className="mobile-menu-panel absolute inset-x-0 top-full bg-white px-3 pb-6 pt-2 font-sans text-[11.7px] font-medium uppercase tracking-wide">
           <nav className="flex flex-col gap-4">
             {links.map((l) => (
               <div key={l.href} className="flex flex-col gap-4">

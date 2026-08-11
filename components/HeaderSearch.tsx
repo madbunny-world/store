@@ -72,7 +72,7 @@ export default function HeaderSearch({
           <div
             role="search"
             aria-label="Search products"
-            className="absolute inset-0 z-50 flex items-center gap-4 bg-white px-6"
+            className="absolute inset-0 z-50 flex items-center gap-4 bg-white px-12"
           >
             <input
               ref={inputRef}
@@ -94,7 +94,7 @@ export default function HeaderSearch({
 
           {query && (
             <div className="absolute inset-x-0 top-full z-50 bg-white shadow-[0_12px_32px_rgba(0,0,0,0.1)]">
-              <ul className="flex flex-col gap-4 px-6 pb-6 pt-2">
+              <ul className="flex flex-col gap-4 px-12 pb-6 pt-2">
                 {results.map((r) => (
                   <li key={r.href}>
                     <Link

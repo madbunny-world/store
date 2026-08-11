@@ -30,17 +30,25 @@ function LinkItem({ link }: { link: FooterGroup["links"][number] }) {
   );
 }
 
-// Footer sitemap (reference: Two Jeys). md+ renders the five columns; below md
-// each group is a full-width accordion row (+ / − toggles, hairline rules) so
-// the footer stays short. One group open at a time; the first starts open,
-// matching the reference.
-export default function FooterNav({ groups }: { groups: FooterGroup[] }) {
+// Footer sitemap, two shapes (Gia, 2026-08): md+ lays the five groups out as
+// one horizontal row of columns — a single ~110px band, so the footer stays
+// short and the newsletter above it stays in the footer peek. Below md the
+// groups collapse into an accordion (one open at a time, first open) to save
+// vertical space on small screens. The caller clears the brand mark on the
+// right via padding on this nav.
+export default function FooterNav({
+  groups,
+  className = "",
+}: {
+  groups: FooterGroup[];
+  className?: string;
+}) {
   const [open, setOpen] = useState<string | null>(groups[0]?.heading ?? null);
 
   return (
-    <nav aria-label="Footer">
-      {/* md and up: columns */}
-      <div className="hidden md:grid md:grid-cols-5 md:gap-x-8">
+    <nav aria-label="Footer" className={className}>
+      {/* md and up: columns in one row */}
+      <div className="hidden md:grid md:grid-cols-5 md:gap-x-6">
         {groups.map((group) => (
           <div key={group.heading}>
             <h2 className="font-sans text-[10px] uppercase tracking-wide text-white/45">
@@ -48,7 +56,7 @@ export default function FooterNav({ groups }: { groups: FooterGroup[] }) {
             </h2>
             <ul className="mt-[11px] flex flex-col gap-[5px]">
               {group.links.map((link) => (
-                <li key={link.label}>
+                <li key={link.label} className="leading-snug">
                   <LinkItem link={link} />
                 </li>
               ))}

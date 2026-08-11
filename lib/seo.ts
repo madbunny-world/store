@@ -36,6 +36,16 @@ export function organizationJsonLd() {
 }
 
 /**
+ * Share-card image for a category page: the first piece that actually has a
+ * photo. Undefined falls back to the site-wide card in the root layout, so a
+ * category with no imagery still shares something branded.
+ */
+export function ogImages(products: Product[], alt: string) {
+  const url = products.find((p) => p.featuredImage?.url)?.featuredImage?.url;
+  return url ? [{ url, alt }] : undefined;
+}
+
+/**
  * Meta description for a product. Prefers the real Shopify copy ("100% Cotton
  * - Black") over repeating the title, which is what search results used to
  * show. Capped near the ~155 chars Google renders.

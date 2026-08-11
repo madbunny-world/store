@@ -14,24 +14,33 @@ import { formatMoney } from "@/lib/money";
 //   "carousel" — one finger-swiped line with snap points, the next card peeking
 //                in so the row reads as scrollable. Home + orders, where a
 //                section is a teaser and vertical space is scarce.
-//   "single"   — one card per row, full width. The category pages, where the
-//                grid IS the page and browsing beats swiping (Gia, 2026-08).
+//   "grid"     — two cards per row (Gia, 2026-08 — was one full-width card per
+//                row). The category pages, where the grid IS the page and
+//                browsing beats swiping.
 const CONTAINER = {
-  base: "flex px-6 md:flex-wrap md:justify-center md:gap-x-6 md:gap-y-16 md:px-12",
+  base: "flex md:flex-wrap md:justify-center md:gap-x-6 md:gap-y-16 md:px-12",
   carousel:
-    "snap-x snap-mandatory scroll-px-6 gap-x-6 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] md:snap-none md:overflow-x-visible md:pb-0 [&::-webkit-scrollbar]:hidden",
-  single: "flex-wrap justify-center gap-y-14",
+    "px-3 snap-x snap-mandatory scroll-px-3 gap-x-3 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] md:snap-none md:overflow-x-visible md:pb-0 [&::-webkit-scrollbar]:hidden",
+  // Half the carousel's mobile gutter and gaps (Gia, 2026-08): px-3/gap-3
+  // horizontally, gap-y-7 vertically. md restores the site rhythm via base.
+  grid: "px-3 flex-wrap justify-center gap-x-3 gap-y-7",
 };
 
 const CARD = {
   base: "group block md:w-auto md:basis-[calc((100%-4.5rem)/4)]",
   carousel: "w-[62%] shrink-0 snap-start sm:w-[42%] md:shrink",
-  single: "w-full",
+  grid: "basis-[calc((100%-0.75rem)/2)]",
 };
 
 const SIZES = {
   carousel: "(max-width: 640px) 62vw, (max-width: 768px) 42vw, 25vw",
-  single: "(max-width: 768px) 100vw, 25vw",
+  grid: "(max-width: 768px) 50vw, 25vw",
+};
+
+// Both modes crop portrait 4:5 on mobile (Gia, 2026-08); md+ stays square.
+const WELL = {
+  carousel: "aspect-[4/5] md:aspect-square",
+  grid: "aspect-[4/5] md:aspect-square",
 };
 
 // Both layers share the lift so the swap is pure opacity on the top image —
@@ -44,7 +53,7 @@ export default function MuseumGrid({
   mobile = "carousel",
 }: {
   cards: GridCard[];
-  mobile?: "carousel" | "single";
+  mobile?: "carousel" | "grid";
 }) {
   return (
     // Full width with the site gutter (px-6 md:px-12) — same offset as the
@@ -59,7 +68,7 @@ export default function MuseumGrid({
             prefetch
             className={`${CARD.base} ${CARD[mobile]}`}
           >
-            <div className="relative aspect-square w-full overflow-hidden bg-white">
+            <div className={`relative w-full overflow-hidden bg-white ${WELL[mobile]}`}>
               {card.image && (
                 <Image
                   src={card.image.url}
@@ -92,10 +101,11 @@ export default function MuseumGrid({
                 </>
               )}
             </div>
-            <div className="mt-5 text-center font-sans text-[12px] font-bold uppercase tracking-wide text-black">
+            {/* 10px on mobile, 12px from md (Gia, 2026-08). */}
+            <div className="mt-5 text-center font-sans text-[10px] font-bold uppercase tracking-wide text-black md:text-[12px]">
               {card.title}
             </div>
-            <div className="mt-1.5 text-center font-sans text-[12px] text-gun-metal">
+            <div className="mt-1.5 text-center font-sans text-[10px] text-gun-metal md:text-[12px]">
               {formatMoney(card.price)}
             </div>
           </Link>

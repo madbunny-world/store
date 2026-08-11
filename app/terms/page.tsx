@@ -16,7 +16,7 @@ const EMAIL = "world.madbunny@gmail.com";
 // state (Michigan). The legal entity is Madbunny LLC, per the return policy.
 export default function TermsPage() {
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-24 pt-16 sm:px-6">
+    <main className="mx-auto w-full max-w-2xl flex-1 px-3 pb-24 pt-16 md:px-12">
       <h1 className="text-[22px] font-semibold">Madbunny Terms and Conditions</h1>
       <p className="mt-2 font-mono text-[9px] uppercase tracking-wider text-gun-metal">
         Effective: August 7, 2026

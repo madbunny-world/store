@@ -3,12 +3,20 @@ import { getAllProducts } from "@/lib/shopify/queries";
 import { isFineArt } from "@/lib/catalog";
 import { toGridCards } from "@/lib/cards";
 import CollectionPage from "@/components/CollectionPage";
+import { ogImages } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Private Collection",
-  description: "Madbunny fine art. Acquired by inquiry.",
-  alternates: { canonical: "/private-collection" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const works = (await getAllProducts()).filter(isFineArt);
+  return {
+    title: "Private Collection",
+    description: "Madbunny fine art. Acquired by inquiry.",
+    alternates: { canonical: "/private-collection" },
+    openGraph: {
+      description: "Madbunny’s 1:1 original works, acquired by inquiry.",
+      images: ogImages(works, "Madbunny fine art"),
+    },
+  };
+}
 
 // Same shape as the other category pages (Gia, 2026-08): centered Splatink
 // title, then the museum grid. Replaces the exhibition-catalogue list — its

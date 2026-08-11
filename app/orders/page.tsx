@@ -26,7 +26,7 @@ export default async function OrdersPage() {
 
   return (
     <main className="flex-1 pb-24">
-      <div className="px-6 pt-14 md:px-12 md:pt-20">
+      <div className="px-3 pt-14 md:px-12 md:pt-20">
         <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-black">
           Orders
         </p>
@@ -47,7 +47,7 @@ export default async function OrdersPage() {
 
       {cards.length > 0 && (
         <section className="pt-24 md:pt-32">
-          <p className="px-6 font-mono text-[11px] uppercase tracking-[0.3em] text-black md:px-12">
+          <p className="px-3 font-mono text-[11px] uppercase tracking-[0.3em] text-black md:px-12">
             While you are here
           </p>
           <div className="mt-10">

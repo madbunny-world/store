@@ -63,7 +63,7 @@ export default async function ShopProductPage({
   });
 
   return (
-    <main className="flex-1 px-4 py-10 sm:px-6">
+    <main className="flex-1 px-3 py-10 md:px-12">
       <JsonLd data={productJsonLd(product)} />
       <JsonLd
         data={breadcrumbJsonLd([

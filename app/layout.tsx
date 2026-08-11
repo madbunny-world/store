@@ -43,6 +43,22 @@ export const metadata: Metadata = {
   openGraph: {
     siteName: "Madbunny",
     type: "website",
+    // Shorter and plainer than the SEO description above. A share card is read
+    // in a chat thread, where iMessage/KakaoTalk clip after ~2 lines — the
+    // search-result sentence was being cut mid-phrase (Gia, 2026-08).
+    description:
+      "MADBUNNY OFFICIAL STORE. Madbunny is an iconic lifestyle brand symbolizing “crazy people who change the world”",
+    // Purpose-made 1200×630 card (Gia, 2026-08) — the exact ratio every
+    // platform crops to, so it renders as drawn. Also the fallback for any
+    // page that doesn't set its own image.
+    images: [
+      {
+        url: "/media/social-card.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Madbunny",
+      },
+    ],
   },
   twitter: { card: "summary_large_image" },
 };

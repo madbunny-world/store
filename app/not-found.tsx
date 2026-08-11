@@ -3,7 +3,7 @@ import BunnyMark from "@/components/BunnyMark";
 
 export default function NotFound() {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-24 text-center">
+    <main className="flex flex-1 flex-col items-center justify-center gap-6 px-3 py-24 text-center md:px-12">
       <BunnyMark className="h-12 w-12 text-black" />
       <p className="font-mono text-sm uppercase tracking-[0.25em] text-gun-metal">
         404 — Not found

@@ -81,7 +81,7 @@ function CampaignBanner() {
 // optional bold link pinned right ("SHOP ALL" in the reference).
 function SectionHeader({ title, link }: { title: React.ReactNode; link?: { href: string; label: string } }) {
   return (
-    <div className="flex items-baseline justify-between px-6 md:px-12">
+    <div className="flex items-baseline justify-between px-3 md:px-12">
       <h2 className="font-sans text-[10.4px] font-bold uppercase tracking-wide text-black md:text-[13px]">
         {title}
       </h2>
@@ -218,7 +218,13 @@ function StoryTeaser() {
             className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/10 to-transparent"
           />
 
-          <div className="absolute inset-x-0 top-0 px-6 pt-8 md:px-12 md:pt-10">
+          {/* Same gutter as the item grids (12px mobile / 48px md+), and the
+              top offset equals the side padding so the label sits square in
+              the corner (Gia, 2026-08). */}
+          {/* flex, not block: as an inline-block on the parent's baseline the
+              label picked up ~6px of strut above it, breaking the square
+              corner. A flex item starts at the padding edge exactly. */}
+          <div className="absolute inset-x-0 top-0 flex px-3 pt-3 md:px-12 md:pt-12">
             {/* Hover lights the label rather than underlining it — a text-shadow
                 glow reads as film chrome, and drops out under reduced motion. */}
             <span className="inline-block font-sans text-[11px] font-bold uppercase tracking-[0.125em] text-bunny-white transition-[text-shadow] duration-300 group-hover:[text-shadow:0_0_12px_rgba(255,255,255,0.9),0_0_28px_rgba(255,255,255,0.55)] motion-reduce:transition-none">

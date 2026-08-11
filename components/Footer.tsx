@@ -50,10 +50,10 @@ function groups(accountUrl: string): FooterGroup[] {
   ];
 }
 
-// Pure-black footer in the reference layout: sitemap columns on top (accordion
-// below md), the Madclub signup below-left, and the giant white brand mark
-// anchored bottom-right, bleeding off the bottom edge (overflow-hidden crops
-// it). © sits bottom-left opposite the mark.
+// Pure-black footer: the Madclub signup first so it sits in the footer peek,
+// then the sitemap as one horizontal band of columns (accordion below md),
+// then the copyright. The giant white brand mark is anchored bottom-right,
+// bleeding off the bottom edge; the columns pad away from it.
 export default function Footer() {
   const accountUrl = `https://${process.env.SHOPIFY_STORE_DOMAIN}/account`;
 
@@ -64,12 +64,12 @@ export default function Footer() {
     // itself by the bleed amount and shifting the whole footer up. `clip` crops
     // without ever being scrollable.
     <footer className="overflow-clip bg-[#000000] text-bunny-white">
-      <div className="relative px-6 pt-12 md:px-12 md:pt-14">
-        <FooterNav groups={groups(accountUrl)} />
-
-        {/* #madclub: the announcement bar's "Sign up for Madclub" jumps here,
+      <div className="relative px-3 pt-12 md:px-12 md:pt-14">
+        {/* Signup leads, so it lands inside the footer peek — the sliver of
+            footer visible as the page bottom comes into view (Gia, 2026-08).
+            #madclub: the announcement bar's "Sign up for Madclub" jumps here,
             from any page. scroll-mt clears the sticky header. */}
-        <div id="madclub" className="mt-14 w-full max-w-md scroll-mt-24 md:mt-24">
+        <div id="madclub" className="w-full max-w-md scroll-mt-24">
           <p className="font-sans text-[11px] text-white/45">
             Join Madclub&trade;
           </p>
@@ -87,7 +87,15 @@ export default function Footer() {
           </p>
         </div>
 
-        <p className="mt-12 pb-6 font-sans text-[9px] text-white/40 md:mt-16">
+        {/* One horizontal band of columns on md+ (accordion below md). The
+            right padding keeps the columns clear of the brand mark, which
+            occupies the right ~30% plus its gutter. */}
+        <FooterNav
+          groups={groups(accountUrl)}
+          className="mt-12 md:mt-14 md:pr-[36%]"
+        />
+
+        <p className="mt-10 pb-6 font-sans text-[9px] text-white/40 md:mt-12">
           © 2026 Madbunny. All rights reserved.
         </p>
 

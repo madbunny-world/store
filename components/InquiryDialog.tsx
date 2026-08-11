@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { CTA_BAR_CLASS } from "./BuyPanel";
@@ -87,7 +88,7 @@ export default function InquiryDialog({
       const data = (await res.json()) as { ok: boolean; error?: string };
       if (data.ok) {
         setStatus("done");
-        setMessage("Inquiry sent. We will be in touch.");
+        setMessage("Successfully sent. Our artist will contact you shortly.");
       } else {
         setStatus("idle");
         setError(true);
@@ -103,16 +104,23 @@ export default function InquiryDialog({
   const ready =
     email.trim() !== "" && fullName.trim() !== "" && address.trim() !== "";
 
-  return (
+  // Portalled out to <body>. Inside <main> the fixed overlay was trapped by
+  // main's page-float-in animation: fill-mode "both" leaves an identity
+  // transform matrix on it, which is still a containing block for fixed
+  // descendants — so the dialog sized itself to the whole page and sat low
+  // instead of centering in the viewport (Gia, 2026-08). No mount guard needed:
+  // BuyPanel gates this on inquiryOpen, which is false until a click, so it
+  // never renders on the server.
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
       aria-labelledby="inquiry-heading"
-      className="fixed inset-0 z-[80] flex items-stretch justify-center sm:items-start sm:overflow-y-auto sm:py-12"
+      className="fixed inset-0 z-[80] flex items-stretch justify-center sm:items-center sm:overflow-y-auto sm:py-12"
     >
       <div onClick={onClose} className="absolute inset-0 bg-black/50" aria-hidden />
 
-      <div className="relative z-10 flex w-full flex-col overflow-y-auto bg-white px-5 pb-8 pt-16 sm:my-auto sm:h-auto sm:max-w-md sm:overflow-visible sm:p-8">
+      <div className="relative z-10 flex max-h-full w-full flex-col overflow-y-auto bg-white px-5 pb-8 pt-16 sm:h-auto sm:max-w-md sm:p-8">
         <button
           onClick={onClose}
           aria-label="Close"
@@ -253,6 +261,7 @@ export default function InquiryDialog({
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

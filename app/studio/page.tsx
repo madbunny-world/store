@@ -5,6 +5,17 @@ export const metadata: Metadata = {
   title: "Studio",
   description: "The founding story of Madbunny — a character-IP drop brand born in a Detroit art studio.",
   alternates: { canonical: "/studio" },
+  openGraph: {
+    description: "Madbunny’s story and Detroit studio",
+    images: [
+      {
+        url: "/media/brand-landing-poster.webp",
+        width: 1920,
+        height: 1012,
+        alt: "The Madbunny studio",
+      },
+    ],
+  },
 };
 
 // One-pager: Splatink title at the same pt-10/md:pt-14 as every other page
@@ -17,7 +28,7 @@ export default function StudioPage() {
     // / 68px desktop) and footer (64px) are fixed, and the film takes whatever
     // height is left over.
     <main className="flex h-[calc(100dvh-111px)] flex-col pb-11 sm:h-[calc(100dvh-132px)]">
-      <div className="flex shrink-0 flex-col items-center px-6 pt-6 text-center md:pt-[34px]">
+      <div className="flex shrink-0 flex-col items-center px-3 pt-6 text-center md:px-12 md:pt-[34px]">
         <SplatinkHeading name="studio" className="h-10 sm:h-11" />
       </div>
 
@@ -44,7 +55,7 @@ export default function StudioPage() {
         />
       </div>
 
-      <div className="mx-auto mt-12 max-w-3xl shrink-0 space-y-6 px-6 text-center font-sans text-[12px] font-[450] leading-relaxed text-black">
+      <div className="mx-auto mt-12 max-w-3xl shrink-0 space-y-6 px-3 text-center font-sans text-[12px] font-[450] leading-relaxed text-black md:px-12">
         <p>
           Madbunny began in 2022 as a sketch in Korean American designer Gia
           Kim&rsquo;s notebook. The name came from friends, who called her

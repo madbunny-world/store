@@ -7,6 +7,17 @@ export const metadata: Metadata = {
   title: "Collectors lounge",
   description: "Register your Madbunny piece. Members get first access.",
   alternates: { canonical: "/collectorslounge" },
+  openGraph: {
+    description: "Register your piece. Members get first access to drops.",
+    images: [
+      {
+        url: "/media/left-right.webp",
+        width: 2560,
+        height: 1417,
+        alt: "Two collectors with Madbunny figures",
+      },
+    ],
+  },
 };
 
 // White gallery page like the rest of the site (Gia, 2026-08 — the madclub
@@ -17,7 +28,7 @@ export const metadata: Metadata = {
 export default function CollectorsLoungePage() {
   return (
     <main className="flex-1 pb-24">
-      <div className="flex flex-col items-center px-6 pt-6 text-center md:pt-[34px]">
+      <div className="flex flex-col items-center px-3 pt-6 text-center md:px-12 md:pt-[34px]">
         <SplatinkHeading name="collectorsLounge" className="h-10 sm:h-11" />
         <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.35em] text-mad-red">
           Members only
@@ -31,7 +42,7 @@ export default function CollectorsLoungePage() {
             fit-content, so a max-width never binds. 354px = 20% wider than the
             295px it used to resolve to; the calc cap keeps it inside the gutter
             on mobile. */}
-        <div className="mt-10 flex w-[354px] max-w-[calc(100vw-3rem)] shrink-0 flex-col items-center text-center">
+        <div className="mt-10 flex w-[354px] max-w-[calc(100vw-1.5rem)] shrink-0 flex-col items-center text-center">
           <SerialForm />
           <p className="mt-5 font-sans text-[12px] leading-relaxed text-gun-metal">
             Registered collectors get first access to drops and invitations to

@@ -33,7 +33,8 @@ export default async function Nav() {
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-sm">
       {/* md and up */}
-      <nav className="relative hidden items-center justify-between px-6 py-5 font-sans text-[11.7px] font-medium uppercase tracking-wide md:flex">
+      {/* px-12 = the site gutter (Gia, 2026-08: one gutter everywhere). */}
+      <nav className="relative hidden items-center justify-between px-12 py-5 font-sans text-[11.7px] font-medium uppercase tracking-wide md:flex">
         <div className="flex items-center gap-6">
           {/* Shop opens a hover panel with the category sections (also on
               focus-within for keyboard). CSS-only: the panel is a child of the
@@ -45,10 +46,10 @@ export default async function Nav() {
             </Link>
             {/* No left padding: the panel's edge AND its links land on the same
                 24px page gutter as SHOP above them (Gia, 2026-08). */}
-            {/* -left-6 pulls the white panel out to the viewport edge (the nav's
-                own px-6 gutter), while pl-6 keeps the links on the 24px gutter
-                line with SHOP above them. */}
-            <div className="absolute -left-6 top-full hidden min-w-max flex-col gap-3 bg-white pb-5 pl-6 pr-8 pt-4 shadow-[0_12px_32px_rgba(0,0,0,0.1)] group-focus-within:flex group-hover:flex">
+            {/* -left-12/pl-12 mirror the nav's px-12: the white panel bleeds to
+                the viewport edge while its links stay on the gutter line with
+                SHOP above them. */}
+            <div className="absolute -left-12 top-full hidden min-w-max flex-col gap-3 bg-white pb-5 pl-12 pr-8 pt-4 shadow-[0_12px_32px_rgba(0,0,0,0.1)] group-focus-within:flex group-hover:flex">
               <Link href="/helloworldcollection" className={linkClass}>
                 &ldquo;Hello, World&rdquo; collection
               </Link>
@@ -91,7 +92,7 @@ export default async function Nav() {
           grid-cols-3 keeps the mark centered no matter the side icons' widths.
           The -m-3/p-3 pair gives each control a ~44px tap area while leaving the
           icon visually where it sits. */}
-      <nav className="grid grid-cols-3 items-center px-4 py-3 md:hidden">
+      <nav className="grid grid-cols-3 items-center px-3 py-3 md:hidden">
         <div className="flex items-center justify-self-start">
           <MobileMenu accountUrl={accountUrl} />
         </div>

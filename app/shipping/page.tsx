@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 // Copy supplied by Gia (madbunny-vault/Policies/Shipping Policy.md, 2026-08-08).
 export default function ShippingPage() {
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-24 pt-16 sm:px-6">
+    <main className="mx-auto w-full max-w-2xl flex-1 px-3 pb-24 pt-16 md:px-12">
       <h1 className="text-[22px] font-semibold">Shipping policy</h1>
       <p className="mt-2 font-mono text-[9px] uppercase tracking-wider text-gun-metal">
         Effective: August 8, 2026
