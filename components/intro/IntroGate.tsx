@@ -3,14 +3,20 @@
 import { useEffect, useRef } from "react";
 
 // Home entrance: plate twist on white, then the overlay fades into the (white)
-// store. Plays on EVERY arrival at the home page in two cuts: hard loads run
-// the full ~2s title card (armed pre-paint as data-intro="play" by the inline
-// script in app/page.tsx, so the page never flashes first); client-side
-// navigations run a ~1s cut (armed here on mount as data-intro="quick" — CSS
-// shortens the twist to 0.7s) so mid-shopping returns stay light. Without JS
-// the attribute is never set and under prefers-reduced-motion CSS keeps the
-// overlay hidden regardless. The overlay hides by attribute removal, never by
-// detaching React-managed DOM.
+// store. Plays on EVERY arrival at the home page. Hard loads are armed pre-paint
+// as data-intro="play" by the inline script in app/page.tsx so the page never
+// flashes first; client-side navigations arm here on mount as "quick". Both run
+// the same 1s cut (Gia, 2026-08 — the hard load used to run ~2s), so the two
+// attribute values now differ only in WHERE they are set. Without JS the
+// attribute is never set, and under prefers-reduced-motion CSS keeps the overlay
+// hidden regardless. The overlay hides by attribute removal, never by detaching
+// React-managed DOM.
+
+// 0.7s twist + 0.3s fade = 1s. TWIST_MS must match the intro-twist animation
+// duration in globals.css.
+const TWIST_MS = 700;
+const FADE_MS = 300;
+
 export default function IntroGate() {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -21,14 +27,14 @@ export default function IntroGate() {
     // and attribute churn too.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // The inline script arming pre-paint means hard load; otherwise this is a
-    // client-side navigation and gets the quick cut.
-    const hard =
-      document.documentElement.getAttribute("data-intro") === "play";
-    if (!hard) document.documentElement.setAttribute("data-intro", "quick");
+    // Armed pre-paint by the inline script on a hard load; otherwise this is a
+    // client-side navigation and has to arm itself.
+    if (document.documentElement.getAttribute("data-intro") !== "play") {
+      document.documentElement.setAttribute("data-intro", "quick");
+    }
     el.style.opacity = "1";
     el.style.pointerEvents = "";
-    el.style.transitionDuration = hard ? "400ms" : "300ms";
+    el.style.transitionDuration = `${FADE_MS}ms`;
 
     let done = false;
     const finish = () => {
@@ -40,11 +46,11 @@ export default function IntroGate() {
       el.style.pointerEvents = "none";
       el.style.opacity = "0";
       el.addEventListener("transitionend", finish, { once: true });
-      window.setTimeout(finish, 700); // fallback if transitionend never fires
+      // Fallback if transitionend never fires (backgrounded tab, etc).
+      window.setTimeout(finish, FADE_MS + 400);
     };
 
-    // Full cut: 1.5s twist + 0.4s fade ≈ 2s. Quick cut: 0.7s + 0.3s ≈ 1s.
-    const fadeTimer = window.setTimeout(fade, hard ? 1600 : 700);
+    const fadeTimer = window.setTimeout(fade, TWIST_MS);
     const skip = () => {
       window.clearTimeout(fadeTimer);
       fade();

@@ -26,9 +26,10 @@
 /* Entrance intro (home): the metal plate catches the light — an overshoot-and-
    settle Y-sweep on white, then the overlay fades into the (white) store.
    Plays on every arrival at /: hard loads are armed pre-paint by an inline
-   script setting data-intro="play" (full ~2s cut), client-side navigations by
-   IntroGate on mount as data-intro="quick" (~1s cut so mid-shopping returns
-   stay light). Without JS (or under reduced motion) the overlay never appears. */
+   script setting data-intro="play", client-side navigations by IntroGate on
+   mount as data-intro="quick". Both cuts run 1s total — 0.7s twist + 0.3s fade
+   (Gia, 2026-08; the hard load used to run ~2s). Without JS (or under reduced
+   motion) the overlay never appears. */
 @keyframes intro-twist {
   from {
     opacity: 0;
@@ -50,10 +51,7 @@ html[data-intro] #intro-gate {
   display: flex;
 }
 html[data-intro] #intro-gate .intro-plate {
-  animation: intro-twist 1.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-html[data-intro="quick"] #intro-gate .intro-plate {
-  animation-duration: 0.7s;
+  animation: intro-twist 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 @media (prefers-reduced-motion: reduce) {
   #intro-gate {
