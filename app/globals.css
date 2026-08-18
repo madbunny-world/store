@@ -78,6 +78,29 @@ html[data-intro] #intro-gate .intro-plate {
   }
 }
 
+/* Upsell rail timer: the active bar fills over one rotation, then the next bar
+   takes over. Paused via animation-play-state while a pointer or finger is on
+   the rail. Under reduced motion the rail does not auto-advance, so the bar
+   just sits full for the current item. */
+@keyframes upsell-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.upsell-progress {
+  transform-origin: left;
+  animation: upsell-progress var(--upsell-duration, 3s) linear forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .upsell-progress {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
 /* Blinking clock colon — crisp on/off once per second (added liveliness). */
 @keyframes clock-blink {
   50% {

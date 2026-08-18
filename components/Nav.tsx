@@ -44,8 +44,6 @@ export default async function Nav() {
             <Link href="/" className={linkClass}>
               Shop
             </Link>
-            {/* No left padding: the panel's edge AND its links land on the same
-                24px page gutter as SHOP above them (Gia, 2026-08). */}
             {/* -left-12/pl-12 mirror the nav's px-12: the white panel bleeds to
                 the viewport edge while its links stay on the gutter line with
                 SHOP above them. */}
@@ -88,11 +86,12 @@ export default async function Nav() {
         </div>
       </nav>
 
-      {/* below md: menu toggle (left) · mark (center) · cart (right).
+      {/* below md: menu toggle (left) · mark (center) · search + cart (right).
           grid-cols-3 keeps the mark centered no matter the side icons' widths.
           The -m-3/p-3 pair gives each control a ~44px tap area while leaving the
-          icon visually where it sits. */}
-      <nav className="grid grid-cols-3 items-center px-3 py-3 md:hidden">
+          icon visually where it sits. `relative` anchors the search overlay to
+          this row. */}
+      <nav className="relative grid grid-cols-3 items-center px-3 py-3 md:hidden">
         <div className="flex items-center justify-self-start">
           <MobileMenu accountUrl={accountUrl} />
         </div>
@@ -103,7 +102,10 @@ export default async function Nav() {
         >
           <BunnyMark className="h-[1.44rem] w-[1.44rem]" />
         </Link>
-        <CartButton className="-m-3 justify-self-end p-3" />
+        <div className="flex items-center gap-5 justify-self-end">
+          <HeaderSearch items={searchItems} variant="icon" />
+          <CartButton />
+        </div>
       </nav>
     </header>
   );

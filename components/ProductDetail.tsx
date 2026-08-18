@@ -24,8 +24,13 @@ export default function ProductDetail({
 
   return (
     <div>
-      {/* Breadcrumb — collection / product */}
-      <nav aria-label="Breadcrumb" className="font-sans text-[12px] font-bold text-black">
+      {/* Breadcrumb — collection / product. Hidden on mobile: the title now
+          leads the page there, so the crumb was just noise above the fold
+          (Gia, 2026-08). Still present on desktop and in the JSON-LD. */}
+      <nav
+        aria-label="Breadcrumb"
+        className="hidden font-sans text-[12px] font-bold text-black md:block"
+      >
         <Link href={collection.path} className="transition-opacity hover:opacity-60">
           {collection.name}
         </Link>
@@ -33,12 +38,12 @@ export default function ProductDetail({
         {product.title}
       </nav>
 
-      <div className="mt-6 grid gap-8 md:grid-cols-2 md:gap-12">
-        {/* Images — media.nodes, browsable */}
-        <ProductGallery images={product.images} title={product.title} />
-
-        {/* Info */}
-        <div>
+      {/* Source order is the mobile order: name/description, then images, then
+          the buy panel — so a shopper reads what it is before scrolling past a
+          full-width photo (Gia, 2026-08). md+ places the three blocks
+          explicitly into the original two columns, gallery left. */}
+      <div className="grid gap-4 md:mt-6 md:grid-cols-2 md:gap-x-12 md:gap-y-5">
+        <div className="md:col-start-2 md:row-start-1">
           {/* h1, not h2: this is the page's subject. The modal that once shared
               this component is gone, so it is always the top-level heading. */}
           <h1 className="font-sans text-[16px] font-bold leading-tight md:text-[18px]">
@@ -52,13 +57,19 @@ export default function ProductDetail({
               dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
             />
           )}
-          <div className="mt-3">
-            <BuyPanel
-              product={product}
-              initialVariantId={initialVariantId}
-              requireSelection={requireVariantSelection}
-            />
-          </div>
+        </div>
+
+        {/* Images — media.nodes, browsable */}
+        <div className="md:col-start-1 md:row-start-1 md:row-span-2">
+          <ProductGallery images={product.images} title={product.title} />
+        </div>
+
+        <div className="md:col-start-2 md:row-start-2">
+          <BuyPanel
+            product={product}
+            initialVariantId={initialVariantId}
+            requireSelection={requireVariantSelection}
+          />
           <DetailSections product={product} />
         </div>
       </div>

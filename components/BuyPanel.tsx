@@ -10,8 +10,10 @@ import InquiryDialog from "./InquiryDialog";
 
 // Shared by the CTA bar here and the inquiry dialog's submit button, so the two
 // can't drift.
+// py-[11.55px] makes the bar 42.6px tall — 20% up from 35.5px (Gia, 2026-08),
+// a bigger tap target for the primary action on mobile.
 export const CTA_BAR_CLASS =
-  "flex w-full items-center justify-between px-4 py-2 font-sans text-[12px] uppercase tracking-wider text-bunny-white transition-opacity";
+  "flex w-full items-center justify-between px-4 py-[11.55px] font-sans text-[12px] uppercase tracking-wider text-bunny-white transition-opacity";
 
 // Option-value name → brand swatch (colors). Falls back to gun-metal.
 const SWATCH: Record<string, string> = {

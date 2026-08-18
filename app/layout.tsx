@@ -7,7 +7,7 @@ import AnnouncementBar from "@/components/AnnouncementBar";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
-import CartDrawer from "@/components/cart/CartDrawer";
+import CartUpsells from "@/components/cart/CartUpsells";
 import FloatingInstagram from "@/components/FloatingInstagram";
 import { siteUrl } from "@/lib/site";
 import { organizationJsonLd } from "@/lib/seo";
@@ -86,7 +86,7 @@ export default function RootLayout({
           {children}
           <Footer />
           <FloatingInstagram />
-          <CartDrawer />
+          <CartUpsells />
         </CartProvider>
         {/* Site-wide Organization + WebSite schema, once per page. */}
         <JsonLd data={organizationJsonLd()} />

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 // SEARCH in the header. Opening swaps the nav row itself for a search field
 // (Gia, 2026-08 — it lives on the header, not as a full-page takeover), with
@@ -12,8 +12,11 @@ import { X } from "lucide-react";
 // each open starts blank.
 export default function HeaderSearch({
   items,
+  variant = "text",
 }: {
   items: { title: string; href: string }[];
+  /** "text" for the desktop utility row; "icon" for the mobile header. */
+  variant?: "text" | "icon";
 }) {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
@@ -57,12 +60,22 @@ export default function HeaderSearch({
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="uppercase transition-opacity hover:opacity-60"
-      >
-        Search
-      </button>
+      {variant === "icon" ? (
+        <button
+          onClick={() => setOpen(true)}
+          aria-label="Search"
+          className="-m-3 p-3 transition-opacity hover:opacity-60"
+        >
+          <Search className="h-5 w-5" strokeWidth={1.5} />
+        </button>
+      ) : (
+        <button
+          onClick={() => setOpen(true)}
+          className="uppercase transition-opacity hover:opacity-60"
+        >
+          Search
+        </button>
+      )}
 
       {open && (
         // Absolute against the nav (position: sticky on the header makes it the
@@ -72,7 +85,7 @@ export default function HeaderSearch({
           <div
             role="search"
             aria-label="Search products"
-            className="absolute inset-0 z-50 flex items-center gap-4 bg-white px-12"
+            className="absolute inset-0 z-50 flex items-center gap-4 bg-white px-3 md:px-12"
           >
             <input
               ref={inputRef}
@@ -94,7 +107,7 @@ export default function HeaderSearch({
 
           {query && (
             <div className="absolute inset-x-0 top-full z-50 bg-white shadow-[0_12px_32px_rgba(0,0,0,0.1)]">
-              <ul className="flex flex-col gap-4 px-12 pb-6 pt-2">
+              <ul className="flex flex-col gap-4 px-3 pb-6 pt-2 md:px-12">
                 {results.map((r) => (
                   <li key={r.href}>
                     <Link
