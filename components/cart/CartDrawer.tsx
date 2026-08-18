@@ -71,14 +71,18 @@ export default function CartDrawer({ upsells = [] }: { upsells?: UpsellItem[] })
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-5">
+        {/* Outside the scroller: the shipping meter stays put while the items
+            scroll under it (Gia, 2026-08). */}
+        <div className="shrink-0 px-5">
           <FreeShippingBar
             subtotal={subtotal}
             remaining={remaining}
             progressPct={progressPct}
             currency={currency}
           />
+        </div>
 
+        <div className="flex-1 overflow-y-auto px-5">
           {empty ? (
             <p className={`py-8 text-gun-metal ${LABEL}`}>Your bag is empty.</p>
           ) : (
@@ -92,7 +96,7 @@ export default function CartDrawer({ upsells = [] }: { upsells?: UpsellItem[] })
                     : line.merchandise.title;
                 return (
                   <li key={line.id} className="flex gap-4">
-                    <div className="relative aspect-[4/5] w-[42%] shrink-0 overflow-hidden bg-white">
+                    <div className="relative aspect-[4/5] w-[33.6%] shrink-0 overflow-hidden bg-white">
                       {line.merchandise.image && (
                         <Image
                           src={line.merchandise.image.url}
@@ -101,7 +105,7 @@ export default function CartDrawer({ upsells = [] }: { upsells?: UpsellItem[] })
                             line.merchandise.product.title
                           }
                           fill
-                          sizes="160px"
+                          sizes="128px"
                           className="object-cover"
                         />
                       )}
@@ -242,8 +246,16 @@ function Upsells({
   busy: boolean;
 }) {
   const railRef = useRef<HTMLUListElement>(null);
+  const settleRef = useRef<number | undefined>(undefined);
+  // True while the timer's own scrollTo is in flight, so its scroll events do
+  // not feed back into setIndex.
+  const programmaticRef = useRef(false);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+
+  // Adding a suggestion removes it from the list, so a stored index can fall
+  // off the end. Derive the live one instead of writing state from an effect.
+  const activeIndex = items.length > 0 ? index % items.length : 0;
 
   useEffect(() => {
     if (paused || items.length < 2) return;
@@ -251,12 +263,15 @@ function Upsells({
     const t = window.setInterval(() => {
       const rail = railRef.current;
       if (!rail) return;
-      const next = (index + 1) % items.length;
+      const next = (activeIndex + 1) % items.length;
+      programmaticRef.current = true;
       setIndex(next);
       rail.scrollTo({ left: next * rail.clientWidth, behavior: "smooth" });
     }, UPSELL_ROTATE_MS);
     return () => window.clearInterval(t);
-  }, [index, paused, items.length]);
+  }, [activeIndex, paused, items.length]);
+
+  useEffect(() => () => window.clearTimeout(settleRef.current), []);
 
   if (items.length === 0) return null;
 
@@ -266,14 +281,31 @@ function Upsells({
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={() => setPaused(true)}
+      // Without this, touch latched paused=true with nothing to clear it: one
+      // tap on a phone (adding an item, say) stopped rotation permanently.
+      onTouchEnd={() => setPaused(false)}
+      onTouchCancel={() => setPaused(false)}
     >
       <h2 className={LABEL}>You might like</h2>
 
       <ul
         ref={railRef}
         onScroll={(e) => {
+          // Sync only once scrolling settles, and only for user-driven scrolls.
+          // A smooth scroll fires many events whose early values still round to
+          // the OLD index; syncing on those snapped the timer bar back and
+          // restarted it just before the slide landed (Gia, 2026-08).
           const rail = e.currentTarget;
-          setIndex(Math.round(rail.scrollLeft / rail.clientWidth));
+          window.clearTimeout(settleRef.current);
+          settleRef.current = window.setTimeout(() => {
+            // The timer already knows where it sent the rail; echoing its own
+            // scroll back would re-key the bar and restart the fill.
+            if (programmaticRef.current) {
+              programmaticRef.current = false;
+              return;
+            }
+            setIndex(Math.round(rail.scrollLeft / rail.clientWidth));
+          }, 120);
         }}
         className="mt-3 flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
@@ -335,9 +367,9 @@ function Upsells({
         <div aria-hidden className="mt-3 flex gap-1.5">
           {items.map((item, i) => (
             <div key={item.handle} className="h-[2px] flex-1 overflow-hidden bg-black/10">
-              {i === index && (
+              {i === activeIndex && (
                 <div
-                  key={index}
+                  key={activeIndex}
                   className="upsell-progress h-full bg-black"
                   style={{
                     ["--upsell-duration" as string]: `${UPSELL_ROTATE_MS}ms`,
