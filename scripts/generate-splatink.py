@@ -26,8 +26,8 @@ HEADINGS = {
     "privateCollection": "Private Collection",
     "studio": "In the studio",
     "collectorsLounge": "Collectors Lounge",
-    "helloWorld": "“Hello, world” collection",
-    "apparel": "Apparel",
+    "toyFigures": "Toy figures",
+    "clothing": "Clothing",
 }
 
 SIZE = 100  # arbitrary; SVG scales

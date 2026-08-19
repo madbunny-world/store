@@ -48,14 +48,14 @@ export default async function Nav() {
                 the viewport edge while its links stay on the gutter line with
                 SHOP above them. */}
             <div className="absolute -left-12 top-full hidden min-w-max flex-col gap-3 bg-white pb-5 pl-12 pr-8 pt-4 shadow-[0_12px_32px_rgba(0,0,0,0.1)] group-focus-within:flex group-hover:flex">
-              <Link href="/helloworldcollection" className={linkClass}>
-                &ldquo;Hello, World&rdquo; collection
+              <Link href="/toyfigures" className={linkClass}>
+                Toy figures
               </Link>
               <Link href="/private-collection" className={linkClass}>
                 Private Collection
               </Link>
-              <Link href="/apparel" className={linkClass}>
-                Apparel
+              <Link href="/clothing" className={linkClass}>
+                Clothing
               </Link>
             </div>
           </div>

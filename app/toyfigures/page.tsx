@@ -10,22 +10,23 @@ import { ogImages, openGraph } from "@/lib/seo";
 export async function generateMetadata(): Promise<Metadata> {
   const toys = (await getAllProducts()).filter((p) => p.tags.includes(TAG.toy));
   return {
-    title: "“Hello, World” collection",
+    title: "Toy figures",
     description:
       "Madbunny Collection 001. Collectible figures in three colorways, available in limited numbers.",
-    alternates: { canonical: "/helloworldcollection" },
+    alternates: { canonical: "/toyfigures" },
     openGraph: openGraph({
       description: "Limited edition collectible toy figures at 100% size.",
-      images: ogImages(toys, "Madbunny “Hello, World” collectible figure"),
+      images: ogImages(toys, "Madbunny collectible toy figure"),
     }),
   };
 }
 
 // The toys, as their own page. Home still carries the same grid as a section;
-// this is the shareable, linkable surface for the collection.
-export default async function HelloWorldCollectionPage() {
+// this is the shareable, linkable surface for the collection. Was
+// /helloworldcollection until the 2026-08 rename — that URL 308s here.
+export default async function ToyFiguresPage() {
   const toys = (await getAllProducts()).filter((p) => p.tags.includes(TAG.toy));
   const cards = toGridCards(toys, { basePath: "/shop" });
 
-  return <CollectionPage title="helloWorld" cards={cards} />;
+  return <CollectionPage title="toyFigures" cards={cards} />;
 }

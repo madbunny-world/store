@@ -16,10 +16,14 @@ const nextConfig: NextConfig = {
     return [
       { source: "/jointheclub", destination: "/collectorslounge", permanent: true },
       // Old listing pages now have real successors (2026-08): the toys live at
-      // /helloworldcollection, apparel is a page again — so /apparel is NOT
-      // redirected. Its :handle rule stays: old PDP URLs predate /shop.
-      { source: "/collectibles", destination: "/helloworldcollection", permanent: true },
+      // /toyfigures, clothing at /clothing.
+      { source: "/collectibles", destination: "/toyfigures", permanent: true },
+      // The 2026-08 rename of both category pages. /apparel/:handle must come
+      // FIRST — Next matches in order, and the bare /apparel rule would
+      // otherwise never see :handle URLs, but the reverse would swallow them.
       { source: "/apparel/:handle", destination: "/shop/:handle", permanent: true },
+      { source: "/apparel", destination: "/clothing", permanent: true },
+      { source: "/helloworldcollection", destination: "/toyfigures", permanent: true },
       { source: "/shop", destination: "/", permanent: true },
       { source: "/about", destination: "/studio", permanent: true },
     ];

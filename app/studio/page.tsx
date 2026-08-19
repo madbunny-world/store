@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ArrowDown } from "lucide-react";
 import SplatinkHeading from "@/components/SplatinkHeading";
 import { openGraph } from "@/lib/seo";
 
@@ -19,62 +20,76 @@ export const metadata: Metadata = {
   }),
 };
 
-// One-pager: Splatink title at the same pt-10/md:pt-14 as every other page
-// title, the brand film on silent loop, then the founding story. The image
-// carousel, the origin-story kicker and the Join Madclub button are gone
-// (Gia, 2026-08).
+// One-pager: the brand film fills the whole page, with the title and the
+// founding story laid over it in white (Gia, 2026-08 — the film used to be a
+// band between a black title and black body copy). The image carousel, the
+// origin-story kicker and the Join Madclub button are gone.
 export default function StudioPage() {
   return (
-    // Height-locked to the viewport so the page never scrolls: nav (47px mobile
-    // / 68px desktop) and footer (64px) are fixed, and the film takes whatever
-    // height is left over.
-    <main className="flex h-[calc(100dvh-111px)] flex-col pb-11 sm:h-[calc(100dvh-132px)]">
-      <div className="flex shrink-0 flex-col items-center px-3 pt-6 text-center md:px-12 md:pt-[34px]">
-        <SplatinkHeading name="studio" className="h-10 sm:h-11" />
-      </div>
+    // min-h, not h: the story runs long on a narrow phone, and the page should
+    // grow rather than clip it — the film covers whatever height results.
+    // bg-black backs the film so a fractional layout height can't leave a pale
+    // hairline where this section meets the black footer.
+    <main className="relative flex min-h-[calc(100dvh-111px)] flex-col justify-center overflow-hidden bg-black sm:min-h-[calc(100dvh-132px)]">
+      {/* Under prefers-reduced-motion the poster frame stands in for the video
+          (house pattern). */}
+      <video
+        className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
+        poster="/media/brand-landing-poster.webp"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+      >
+        <source src="/media/brand-landing.webm" type="video/webm" />
+        <source src="/media/brand-landing.mp4" type="video/mp4" />
+      </video>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/media/brand-landing-poster.webp"
+        alt="The Madbunny studio"
+        className="absolute inset-0 hidden h-full w-full object-cover motion-reduce:block"
+      />
 
-      {/* Fills the space the carousel used to. Under prefers-reduced-motion the
-          poster frame stands in for the video (house pattern). */}
-      <div className="mt-8 min-h-0 max-h-[634px] flex-1">
-        <video
-          className="h-full w-full object-cover motion-reduce:hidden"
-          poster="/media/brand-landing-poster.webp"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
+      {/* Scrim: the film runs bright in places, and white copy has to hold over
+          every frame of a loop, not just the poster. */}
+      <div aria-hidden className="absolute inset-0 bg-black/50" />
+
+      <div className="relative z-10 flex flex-col items-center px-3 py-16 text-center md:px-12">
+        <SplatinkHeading name="studio" className="h-10 text-bunny-white sm:h-11" />
+
+        <div className="mt-12 max-w-3xl space-y-6 font-sans text-[12px] font-[450] leading-relaxed text-bunny-white">
+          <p>
+            Madbunny&copy; is the creation of Korean American designer{" "}
+            <strong className="font-bold">gia.</strong>, based in Detroit, USA.
+          </p>
+          <p>
+            Since 2022, gia. has been learning to fully embrace her wild
+            creativity in pursuit of her true self. Along the way, she&rsquo;s
+            met entrepreneurs, artists, athletes, and others unapologetically
+            obsessed with their craft, people who show up boldly. Over time,
+            it&rsquo;s become clear: the people who change the world are the
+            ones who fully embrace their wildness and bet on themselves.
+          </p>
+          <p>
+            Today, Madbunny&copy; Studio is a bold lifestyle brand creating
+            collectibles, clothing, and digital goods, all on a mission to
+            spread the wild.
+          </p>
+          <p>If this sounds like you, join Madclub&copy;.</p>
+        </div>
+
+        {/* Scroll cue under the story, pointing at the newsletter block in the
+            footer — which is where "join Madclub" actually happens. A bare
+            glyph, not the Join Madclub button Gia removed. */}
+        <a
+          href="#madclub"
+          aria-label="Go to the Madclub sign-up"
+          className="mt-10 text-bunny-white opacity-70 transition-opacity hover:opacity-100"
         >
-          <source src="/media/brand-landing.webm" type="video/webm" />
-          <source src="/media/brand-landing.mp4" type="video/mp4" />
-        </video>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/media/brand-landing-poster.webp"
-          alt="The Madbunny studio"
-          className="hidden h-full w-full object-cover motion-reduce:block"
-        />
-      </div>
-
-      <div className="mx-auto mt-12 max-w-3xl shrink-0 space-y-6 px-3 text-center font-sans text-[12px] font-[450] leading-relaxed text-black md:px-12">
-        <p>
-          Madbunny began in 2022 as a sketch in Korean American designer Gia
-          Kim&rsquo;s notebook. The name came from friends, who called her
-          &ldquo;a madbunny!&rdquo; for her wild side. She kept the name and
-          built the character around it.
-        </p>
-        <p>
-          In a Detroit studio she made the first figures by hand, one at a time,
-          and sold them to people who came looking. The brand debuted at
-          Artclvb&rsquo;s Art Fair with a limited run that sold out.
-        </p>
-        <p>
-          Today Madbunny runs as a lifestyle and art brand, carrying the same
-          bold character energy into every form it can hold. Our community
-          Madclub is the next. A collective of creatives and collectors who are
-          obsessive about their work and unapologetic about every side of
-          themselves. You already know if you are one, join us.
-        </p>
+          <ArrowDown className="h-5 w-5" strokeWidth={1.75} />
+        </a>
       </div>
     </main>
   );

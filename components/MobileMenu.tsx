@@ -11,9 +11,9 @@ const links: { href: string; label: string; children?: { href: string; label: st
     href: "/",
     label: "Shop",
     children: [
-      { href: "/helloworldcollection", label: "“Hello, World” collection" },
+      { href: "/toyfigures", label: "Toy figures" },
       { href: "/private-collection", label: "Private Collection" },
-      { href: "/apparel", label: "Apparel" },
+      { href: "/clothing", label: "Clothing" },
     ],
   },
   { href: "/studio", label: "Studio" },

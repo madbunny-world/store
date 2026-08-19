@@ -25,9 +25,9 @@ export function productCategory(product: Product): {
   if (product.tags.includes(TAG.fineArt))
     return { name: "Private Collection", path: "/private-collection" };
   if (product.tags.includes(TAG.apparel))
-    return { name: "Apparel", path: "/apparel" };
+    return { name: "Clothing", path: "/clothing" };
   if (product.tags.includes(TAG.toy))
-    return { name: "“Hello, world” collection", path: "/helloworldcollection" };
+    return { name: "Toy figures", path: "/toyfigures" };
   return { name: "Shop", path: "/" };
 }
 

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { GridCard } from "@/lib/cards";
-import { formatMoney } from "@/lib/money";
+import Price from "./Price";
 
 // "You may also like" row under the product detail. Deliberately lighter than
 // the catalog grids — no (NN) index, since numbering a suggestion set would
@@ -71,7 +71,7 @@ export default function RelatedProducts({
                 {card.title}
               </div>
               <div className="mt-1.5 text-center font-sans text-[12px] text-gun-metal">
-                {formatMoney(card.price)}
+                <Price money={card.price} />
               </div>
             </Link>
           );

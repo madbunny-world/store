@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { GridCard } from "@/lib/cards";
-import { formatMoney } from "@/lib/money";
+import Price from "./Price";
 
 // v3 gallery grid, reference-aligned: square 1:1 crops on white, centered bold
 // caption + price. Sold-out buyables get a gray wash and a black SOLD OUT tab
@@ -106,7 +106,7 @@ export default function MuseumGrid({
               {card.title}
             </div>
             <div className="mt-1.5 text-center font-sans text-[10px] text-gun-metal md:text-[12px]">
-              {formatMoney(card.price)}
+              <Price money={card.price} />
             </div>
           </Link>
         );

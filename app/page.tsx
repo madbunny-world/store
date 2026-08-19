@@ -53,34 +53,36 @@ export default function Home() {
 
 function CampaignBanner() {
   return (
-    // Full-bleed at the image's native 2560×1467 ratio — no crop, no shift.
+    // Full-bleed at the image's native 1584×960 ratio — no crop, no shift.
     <div className="relative">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/media/madclub-landing.webp"
-        alt="Madclub gathering bathed in red light"
-        width={2560}
-        height={1467}
+        src="/media/toy-landing.webp"
+        alt="Three Madbunny figures in black and mad red on a pale background"
+        width={1584}
+        height={960}
         className="w-full"
         loading="eager"
         fetchPriority="high"
       />
       {/* The wordmark IS the page title, so it carries the h1 — with the words
           as real text for crawlers and screen readers, and the artwork marked
-          decorative (Gia, 2026-08 — SEO; home had no h1 at all). The SVG is
-          1309×341, so width alone sets height. */}
-      <h1 className="pointer-events-none absolute inset-x-0 bottom-0 w-full md:px-12">
+          decorative (Gia, 2026-08 — SEO; home had no h1 at all). The sticker
+          mark is a true vector (1436×456 viewBox, 3 paths) — the raster export
+          was visibly soft at banner width. Bottom-aligned, centered, at 80% of
+          the banner width (Gia, 2026-08). */}
+      <h1 className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center">
         <span className="sr-only">
           Madbunny official store. Madbunny is a lifestyle brand symbolizing
           &ldquo;crazy people who change the world&rdquo;.
         </span>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/media/madbunny-submark-white.svg"
+          src="/media/madbunny-logo-sticker.svg"
           alt=""
-          width={1309}
-          height={341}
-          className="w-full"
+          width={1436}
+          height={456}
+          className="w-4/5"
           loading="eager"
         />
       </h1>
@@ -108,7 +110,7 @@ function SectionHeader({ title, link }: { title: React.ReactNode; link?: { href:
   );
 }
 
-// Toys and apparel as separate category sections. The section ids are anchor
+// Toy figures and clothing as separate category sections. The section ids are anchor
 // targets for the nav's Shop dropdown; scroll-mt clears the sticky header.
 // Home is the shop index, so "Shop all" resolves here.
 async function Shop() {
@@ -133,25 +135,46 @@ async function Shop() {
   return (
     <>
       {toys.length > 0 && (
-        <section id="hello-world" className="scroll-mt-20 pt-[29px] md:pt-[38px]">
+        <section id="toy-figures" className="scroll-mt-20 pt-[29px] md:pt-[38px]">
           <SectionHeader
-            title={<>&ldquo;Hello, World&rdquo; collection</>}
-            link={{ href: "/helloworldcollection", label: "Shop all" }}
+            title="Toy figures"
+            link={{ href: "/toyfigures", label: "Shop all" }}
           />
           <div className="mt-12 md:mt-16">
             <MuseumGrid cards={toys} />
           </div>
         </section>
       )}
+      {/* The old red landing shot, now a divider between the two shop
+          sections (Gia, 2026-08). */}
+      <MadclubBand />
       {wear.length > 0 && (
-        <section id="apparel" className="scroll-mt-20 pt-[34px] md:pt-12">
-          <SectionHeader title="Apparel" link={{ href: "/apparel", label: "Shop all" }} />
+        <section id="clothing" className="scroll-mt-20 pt-[34px] md:pt-12">
+          <SectionHeader title="Clothing" link={{ href: "/clothing", label: "Shop all" }} />
           <div className="mt-12 md:mt-16">
             <MuseumGrid cards={wear} />
           </div>
         </section>
       )}
     </>
+  );
+}
+
+// The red madclub shot that used to open the page, now sitting between the
+// toys and apparel. Full-bleed at its native 2560×1467 ratio.
+function MadclubBand() {
+  return (
+    <section className="mt-[34px] md:mt-12">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/media/madclub-landing.webp"
+        alt="Madclub gathering bathed in red light"
+        width={2560}
+        height={1467}
+        className="w-full"
+        loading="lazy"
+      />
+    </section>
   );
 }
 

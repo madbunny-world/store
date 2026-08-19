@@ -8,8 +8,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteUrl();
   const staticRoutes = [
     "",
-    "/helloworldcollection",
-    "/apparel",
+    "/toyfigures",
+    "/clothing",
     "/private-collection",
     "/studio",
     "/collectorslounge",

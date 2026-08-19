@@ -3,7 +3,7 @@ import type { SplatinkKey } from "./splatink/paths";
 import MuseumGrid from "./MuseumGrid";
 import SplatinkHeading from "./SplatinkHeading";
 
-// Shared body for the category pages (/helloworldcollection, /apparel):
+// Shared body for the category pages (/toyfigures, /clothing):
 // centered Splatink title — one per page, matching /private-collection — then
 // the museum grid, 4 up on desktop and 2 per row on mobile (the grid is the
 // page here, so browsing beats swiping). No count line.

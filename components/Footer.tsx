@@ -15,8 +15,8 @@ function groups(accountUrl: string): FooterGroup[] {
     {
       heading: "Shop",
       links: [
-        { label: "“Hello, world” collection", href: "/helloworldcollection" },
-        { label: "Apparel", href: "/apparel" },
+        { label: "Toy figures", href: "/toyfigures" },
+        { label: "Clothing", href: "/clothing" },
         { label: "Private collection", href: "/private-collection" },
       ],
     },
