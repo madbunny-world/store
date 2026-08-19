@@ -37,10 +37,10 @@ const SIZES = {
   grid: "(max-width: 768px) 50vw, 25vw",
 };
 
-// Both modes crop portrait 4:5 on mobile (Gia, 2026-08); md+ stays square.
+// Portrait 4:5 at every width (Gia, 2026-08 — md+ used to square off).
 const WELL = {
-  carousel: "aspect-[4/5] md:aspect-square",
-  grid: "aspect-[4/5] md:aspect-square",
+  carousel: "aspect-[4/5]",
+  grid: "aspect-[4/5]",
 };
 
 // Both layers share the lift so the swap is pure opacity on the top image —

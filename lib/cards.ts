@@ -94,6 +94,52 @@ function productCard(p: Product, basePath: string): GridCard {
   };
 }
 
+// Toy titles carry their scale: `Madbunny "Hello, World" 100% (Bunny Black)`.
+const SIZE_RE = /(\d+(?:\.\d+)?)\s*%/;
+
+function sizePercent(title: string): number {
+  const m = title.match(SIZE_RE);
+  return m ? parseFloat(m[1]) : 0;
+}
+
+/** The title minus its scale — the 100% and the 400% of one figure share it. */
+function sizelessKey(title: string): string {
+  return title.replace(SIZE_RE, " ").replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+/**
+ * Display order (Gia, 2026-08): in-stock pieces first and sold-out ones at the
+ * back; same figure grouped together and run small to large (100% → 200% →
+ * 400%). Anything else keeps Shopify's store order.
+ *
+ * Sorted on precomputed ranks rather than a comparator that inspects both
+ * titles. "Same name → compare size, otherwise keep order" is NOT transitive
+ * (A ties B, B ties C, yet A ≠ C), and sort() with an intransitive comparator
+ * is free to return anything.
+ */
+function orderCards(cards: GridCard[]): GridCard[] {
+  const firstSeen = new Map<string, number>();
+  cards.forEach((card, i) => {
+    const key = sizelessKey(card.title);
+    if (!firstSeen.has(key)) firstSeen.set(key, i);
+  });
+  // Fine art is inquiry-only and never reads as sold out, so it never sinks —
+  // every painting sits at quantity 0 and would otherwise all rank last.
+  const sunk = (c: GridCard) => (!c.fineArt && !c.available ? 1 : 0);
+  const group = (c: GridCard) => firstSeen.get(sizelessKey(c.title)) ?? 0;
+
+  return cards
+    .map((card, i) => ({ card, i }))
+    .sort(
+      (a, b) =>
+        sunk(a.card) - sunk(b.card) ||
+        group(a.card) - group(b.card) ||
+        sizePercent(a.card.title) - sizePercent(b.card.title) ||
+        a.i - b.i,
+    )
+    .map((entry) => entry.card);
+}
+
 /**
  * One card per product by default. `expandColorways` splits a Color-option
  * product into one card per colorway (spec D-08) — used only if a colorway
@@ -112,5 +158,5 @@ export function toGridCards(
       cards.push(productCard(p, basePath));
     }
   }
-  return cards;
+  return orderCards(cards);
 }
