@@ -59,8 +59,8 @@ export default async function Nav() {
               </Link>
             </div>
           </div>
-          <Link href="/studio" className={linkClass}>
-            Studio
+          <Link href="/about" className={linkClass}>
+            About
           </Link>
           <Link href="/collectorslounge" className={linkClass}>
             Collector&rsquo;s lounge

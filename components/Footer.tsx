@@ -23,7 +23,7 @@ function groups(accountUrl: string): FooterGroup[] {
     {
       heading: "Madbunny",
       links: [
-        { label: "Studio", href: "/studio" },
+        { label: "About", href: "/about" },
         { label: "Collector’s lounge", href: "/collectorslounge" },
       ],
     },

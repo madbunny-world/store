@@ -33,9 +33,9 @@ function LinkItem({ link }: { link: FooterGroup["links"][number] }) {
 // Footer sitemap, two shapes (Gia, 2026-08): md+ lays the five groups out as
 // one horizontal row of columns — a single ~110px band, so the footer stays
 // short and the newsletter above it stays in the footer peek. Below md the
-// groups collapse into an accordion (one open at a time, first open) to save
-// vertical space on small screens. The caller clears the brand mark on the
-// right via padding on this nav.
+// groups collapse into an accordion — one open at a time, all closed to start
+// (Gia, 2026-08) — to save vertical space on small screens. The caller clears
+// the brand mark on the right via padding on this nav.
 export default function FooterNav({
   groups,
   className = "",
@@ -43,7 +43,7 @@ export default function FooterNav({
   groups: FooterGroup[];
   className?: string;
 }) {
-  const [open, setOpen] = useState<string | null>(groups[0]?.heading ?? null);
+  const [open, setOpen] = useState<string | null>(null);
 
   return (
     <nav aria-label="Footer" className={className}>
@@ -84,15 +84,27 @@ export default function FooterNav({
                   <Plus className="h-4 w-4" strokeWidth={2} aria-hidden />
                 )}
               </button>
-              {isOpen && (
-                <ul className="flex flex-col gap-[6px] pb-[14px]">
-                  {group.links.map((link) => (
-                    <li key={link.label}>
-                      <LinkItem link={link} />
-                    </li>
-                  ))}
-                </ul>
-              )}
+              {/* Same open/close motion as the PDP disclosure sections: the
+                  0fr→1fr grid row transitions to the content's natural height,
+                  so there is no fixed max-height to guess at. The panel stays
+                  mounted for that to animate at all — inert keeps its links out
+                  of the tab order and the a11y tree while it is shut. */}
+              <div
+                className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none ${
+                  isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                }`}
+                inert={!isOpen}
+              >
+                <div className="overflow-hidden">
+                  <ul className="flex flex-col gap-[6px] pb-[14px]">
+                    {group.links.map((link) => (
+                      <li key={link.label}>
+                        <LinkItem link={link} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
           );
         })}

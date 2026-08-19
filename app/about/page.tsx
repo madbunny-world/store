@@ -4,9 +4,9 @@ import SplatinkHeading from "@/components/SplatinkHeading";
 import { openGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Studio",
+  title: "About",
   description: "The founding story of Madbunny — a character-IP drop brand born in a Detroit art studio.",
-  alternates: { canonical: "/studio" },
+  alternates: { canonical: "/about" },
   openGraph: openGraph({
     description: "Madbunny’s story and Detroit studio",
     images: [
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 // founding story laid over it in white (Gia, 2026-08 — the film used to be a
 // band between a black title and black body copy). The image carousel, the
 // origin-story kicker and the Join Madclub button are gone.
-export default function StudioPage() {
+export default function AboutPage() {
   return (
     // min-h, not h: the story runs long on a narrow phone, and the page should
     // grow rather than clip it — the film covers whatever height results.
@@ -57,25 +57,33 @@ export default function StudioPage() {
       <div aria-hidden className="absolute inset-0 bg-black/50" />
 
       <div className="relative z-10 flex flex-col items-center px-3 py-16 text-center md:px-12">
-        <SplatinkHeading name="studio" className="h-10 text-bunny-white sm:h-11" />
+        {/* Height-capped by viewport width below sm, not the house h-10: this
+            title is far longer than the other Splatink headings ("About
+            Madbunny© Studio" vs "Clothing"), and at h-10 it measured 376px on a
+            375px screen — clipped at both edges. 9vw keeps it inside the gutter
+            down to a 320px phone. */}
+        <SplatinkHeading name="about" className="h-[9vw] text-bunny-white sm:h-11" />
 
-        <div className="mt-12 max-w-3xl space-y-6 font-sans text-[12px] font-[450] leading-relaxed text-bunny-white">
+        {/* 52.8rem = max-w-3xl (48rem) + 10%, widening the measure evenly on
+            both sides (Gia, 2026-08). */}
+        <div className="mt-12 max-w-[52.8rem] space-y-6 font-sans text-[12px] font-[450] leading-relaxed text-bunny-white">
+          {/* What Madbunny is now leads; the origin story follows (Gia,
+              2026-08). */}
           <p>
-            Madbunny&copy; is the creation of Korean American designer{" "}
-            <strong className="font-bold">gia.</strong>, based in Detroit, USA.
-          </p>
-          <p>
-            Since 2022, gia. has been learning to fully embrace her wild
-            creativity in pursuit of her true self. Along the way, she&rsquo;s
-            met entrepreneurs, artists, athletes, and others unapologetically
-            obsessed with their craft, people who show up boldly. Over time,
-            it&rsquo;s become clear: the people who change the world are the
-            ones who fully embrace their wildness and bet on themselves.
-          </p>
-          <p>
-            Today, Madbunny&copy; Studio is a bold lifestyle brand creating
+            Madbunny&copy; Studio is a Detroit-based lifestyle brand creating
             collectibles, clothing, and digital goods, all on a mission to
             spread the wild.
+          </p>
+          <p>
+            Since 2022, Korean American designer{" "}
+            <strong className="font-bold">gia.</strong>{" "}
+            has been learning to
+            fully embrace her wild creativity in pursuit of her true self. Along
+            the way, she&rsquo;s met entrepreneurs, artists, athletes, and others
+            unapologetically obsessed with their craft, people who show up
+            boldly. Over time, one thing has become clear: the people who change
+            the world are the ones who fully embrace their wildness and bet on
+            themselves.
           </p>
           <p>If this sounds like you, join Madclub&copy;.</p>
         </div>

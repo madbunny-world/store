@@ -55,15 +55,28 @@ export default function Home() {
 
 function CampaignBanner() {
   return (
-    // Full-bleed at the image's native 1584×960 ratio — no crop, no shift.
-    <div className="relative">
+    // Full-bleed. From md up it is trimmed 40px off the top and bottom edges;
+    // below md the whole 1584×960 frame shows uncropped (Gia, 2026-08). The
+    // crop is flat px, so it costs a phone far more of the picture than a
+    // desktop — 80px is ~10% of an 827px-tall banner but ~35% of a 227px one,
+    // which is why it is gated rather than shared.
+    //
+    // The negative margins pull the image past the wrapper on both edges and
+    // the wrapper clips it, so the frame loses height while the photo keeps its
+    // native scale — a shorter crop, not a squashed image.
+    // overflow-clip rather than overflow-hidden: hidden would make this a
+    // scroll container, which is what silently shifted the footer once before.
+    // flow-root is load-bearing — clip does NOT establish a block formatting
+    // context, so without it the image's negative margins collapse through the
+    // wrapper and move the whole banner up instead of trimming it.
+    <div className="relative flow-root overflow-clip">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/media/toy-landing.webp"
         alt="Three Madbunny figures in black and mad red on a pale background"
         width={1584}
         height={960}
-        className="w-full"
+        className="w-full md:-my-10"
         loading="eager"
         fetchPriority="high"
       />
@@ -164,25 +177,30 @@ async function Shop() {
 
   return (
     <>
-      {toys.length > 0 && (
-        <section id="toy-figures" className="scroll-mt-20 pt-[29px] md:pt-[38px]">
-          <SectionHeader
-            title="Toy figures"
-            link={{ href: "/toyfigures", label: "Shop all" }}
-          />
+      {/* Clothing leads, toy figures follow (Gia, 2026-08 — swapped). The
+          leading section keeps the tighter top padding: it sits right under the
+          sticker, where the following one sits under the full-bleed band. Both
+          carry +20px top and bottom over those base values (Gia, 2026-08), so
+          the pt numbers here are base + 20 rather than round figures. */}
+      {wear.length > 0 && (
+        <section id="clothing" className="scroll-mt-20 pb-5 pt-[49px] md:pt-[58px]">
+          <SectionHeader title="Clothing" link={{ href: "/clothing", label: "Shop all" }} />
           <div className="mt-12 md:mt-16">
-            <MuseumGrid cards={toys} />
+            <MuseumGrid cards={wear} />
           </div>
         </section>
       )}
       {/* The old red landing shot, now a divider between the two shop
           sections (Gia, 2026-08). */}
       <MadclubBand />
-      {wear.length > 0 && (
-        <section id="clothing" className="scroll-mt-20 pt-[34px] md:pt-12">
-          <SectionHeader title="Clothing" link={{ href: "/clothing", label: "Shop all" }} />
+      {toys.length > 0 && (
+        <section id="toy-figures" className="scroll-mt-20 pb-5 pt-[54px] md:pt-[68px]">
+          <SectionHeader
+            title="Toy figures"
+            link={{ href: "/toyfigures", label: "Shop all" }}
+          />
           <div className="mt-12 md:mt-16">
-            <MuseumGrid cards={wear} />
+            <MuseumGrid cards={toys} />
           </div>
         </section>
       )}
@@ -233,7 +251,7 @@ async function PrivateCollection() {
   if (cards.length === 0) return null;
 
   return (
-    <section className="pt-[34px] md:pt-12">
+    <section className="pb-5 pt-[54px] md:pt-[68px]">
       <SectionHeader
         title="Private Collection"
         link={{ href: "/private-collection", label: "Shop all" }}
@@ -246,12 +264,12 @@ async function PrivateCollection() {
 }
 
 // Brand banner: the landing film on silent loop with the story statement over
-// it. Whole banner links to /studio. Under prefers-reduced-motion the poster
+// it. Whole banner links to /about. Under prefers-reduced-motion the poster
 // frame stands in for the video (house pattern).
 function StoryTeaser() {
   return (
     <section className="mt-[34px] md:mt-12">
-      <Link href="/studio" className="group relative block">
+      <Link href="/about" className="group relative block">
         {/* bg-black, not bg-card: the section abuts the black footer, and at
             fractional layout heights the video can leave a subpixel row of the
             well exposed — light gray there reads as a hairline seam. */}

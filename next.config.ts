@@ -25,7 +25,8 @@ const nextConfig: NextConfig = {
       { source: "/apparel", destination: "/clothing", permanent: true },
       { source: "/helloworldcollection", destination: "/toyfigures", permanent: true },
       { source: "/shop", destination: "/", permanent: true },
-      { source: "/about", destination: "/studio", permanent: true },
+      // Reversed 2026-08: /about is the real page again, /studio the alias.
+      { source: "/studio", destination: "/about", permanent: true },
     ];
   },
 };

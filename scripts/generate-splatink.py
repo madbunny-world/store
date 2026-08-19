@@ -24,7 +24,7 @@ from fontTools.ttLib import TTFont
 HEADINGS = {
     "madbunny": "Madbunny®",
     "privateCollection": "Private Collection",
-    "studio": "In the studio",
+    "about": "About Madbunny© Studio",
     "collectorsLounge": "Collectors Lounge",
     "toyFigures": "Toy figures",
     "clothing": "Clothing",
@@ -57,8 +57,10 @@ def main() -> None:
                 x += 0.33 * SIZE
                 continue
             glyph = glyph_set[name]
-            # ® renders small and baseline-aligned (mock), not at full cap size.
-            s = scale * (0.42 if ch == "®" else 1)
+            # ® and © render small and baseline-aligned (mock), not at full
+            # cap size — at 1:1 they tower over the lowercase and read as a
+            # letter rather than a mark.
+            s = scale * (0.42 if ch in "®©" else 1)
             # Font units are y-up; SVG is y-down → flip y, then offset by pen x.
             transform = (s, 0, 0, -s, x, 0)
             glyph.draw(TransformPen(svg_pen, transform))

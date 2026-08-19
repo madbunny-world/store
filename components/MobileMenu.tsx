@@ -16,7 +16,7 @@ const links: { href: string; label: string; children?: { href: string; label: st
       { href: "/clothing", label: "Clothing" },
     ],
   },
-  { href: "/studio", label: "Studio" },
+  { href: "/about", label: "About" },
   { href: "/collectorslounge", label: "Collector’s lounge" },
 ];
 
