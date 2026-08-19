@@ -43,6 +43,7 @@ export default function Home() {
       <IntroGate />
       <main className="flex-1">
         <CampaignBanner />
+        <Wordmark />
         <Shop />
         <CollectorsBand />
         <PrivateCollection />
@@ -66,37 +67,56 @@ function CampaignBanner() {
         loading="eager"
         fetchPriority="high"
       />
-      {/* The wordmark IS the page title, so it carries the h1 — with the words
-          as real text for crawlers and screen readers, and the artwork marked
-          decorative (Gia, 2026-08 — SEO; home had no h1 at all).
-
-          A raster, not the SVG, and deliberately so: the mark's drop shadow is
-          a blur, and Safari renders ANY blur — an SVG <filter> or a CSS
-          drop-shadow — into an offscreen texture below device resolution. That
-          made the logo jagged one way and blurry the other. Baking the shadow
-          into pixels leaves nothing to rasterise. Exported at 2872px (2x the
-          artwork) from the original filtered SVG, so the shadow is the one
-          Figma drew.
-
-          next/image, so a phone downloads a ~640–1080px variant of this rather
-          than the full 2872. Bottom-aligned, centred, at 80% of the banner
-          width. */}
-      <h1 className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center">
-        <span className="sr-only">
-          Madbunny official store. Madbunny is a lifestyle brand symbolizing
-          &ldquo;crazy people who change the world&rdquo;.
-        </span>
-        <Image
-          src="/media/madbunny-logo-sticker.webp"
-          alt=""
-          width={2872}
-          height={912}
-          sizes="80vw"
-          className="w-4/5"
-          priority
-        />
-      </h1>
     </div>
+  );
+}
+
+// The sticker straddles the seam between the campaign photo and the shop —
+// half on the image, half on white — so it reads as slapped across the join
+// rather than captioning the banner (Gia, 2026-08).
+//
+// The negative margin is exactly half the mark's own height, and BOTH are
+// percentages of the container width (full-bleed at a 2872×912 ratio, so
+// 31.76% of the width tall — halved, 15.88%). Percentage margins resolve
+// against width, so the 50/50 split holds at every viewport with no
+// breakpoints; if the mark's width ever changes, that number is
+// width_fraction × 912 / 2872 / 2. The extra flat offset sits the mark deeper
+// into the photo than a true half-and-half (Gia, 2026-08). It has to be
+// smaller below md: the offset is flat px while the mark's height scales with
+// the viewport, so on a 375px screen the mark is only ~119px tall and a large
+// pull lifts it clear off the seam AND drags the section header up behind the
+// banner photo. Below md it is therefore a clean 50/50 with no flat term at
+// all. The lower
+// half stays in normal flow, which is what pushes the section below down —
+// there is no hand-tuned padding on the next section to drift out of sync.
+//
+// It still carries the h1: the words ship as real text for crawlers and screen
+// readers, with the artwork marked decorative (SEO — home had no h1 at all).
+//
+// A raster, not the SVG, and deliberately so: the mark's drop shadow is a blur,
+// and Safari renders ANY blur — an SVG <filter> or a CSS drop-shadow — into an
+// offscreen texture below device resolution, which read as jagged one way and
+// blurry the other. Baking the shadow into pixels leaves nothing to rasterise.
+// Exported at 2872px (2x the artwork) from the original filtered SVG, so the
+// shadow is the one Figma drew; next/image then serves a ~640px variant to a
+// phone rather than the whole file.
+function Wordmark() {
+  return (
+    <h1 className="pointer-events-none relative z-10 -mt-[15.88%] md:mt-[calc(-15.88%_-_70px)] flex justify-center">
+      <span className="sr-only">
+        Madbunny official store. Madbunny is a lifestyle brand symbolizing
+        &ldquo;crazy people who change the world&rdquo;.
+      </span>
+      <Image
+        src="/media/madbunny-logo-sticker.webp"
+        alt=""
+        width={2872}
+        height={912}
+        sizes="100vw"
+        className="w-full"
+        priority
+      />
+    </h1>
   );
 }
 
