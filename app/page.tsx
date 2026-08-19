@@ -68,9 +68,16 @@ function CampaignBanner() {
       {/* The wordmark IS the page title, so it carries the h1 — with the words
           as real text for crawlers and screen readers, and the artwork marked
           decorative (Gia, 2026-08 — SEO; home had no h1 at all). The sticker
-          mark is a true vector (1436×456 viewBox, 3 paths) — the raster export
-          was visibly soft at banner width. Bottom-aligned, centered, at 80% of
-          the banner width (Gia, 2026-08). */}
+          mark is a true vector (1436×456 viewBox) — the raster export was
+          visibly soft at banner width. Bottom-aligned, centered, at 80% of the
+          banner width (Gia, 2026-08).
+
+          The drop shadow lives here, not in the SVG: an SVG <filter> makes
+          Safari rasterise the whole graphic at CSS resolution when it is loaded
+          through <img>, which read as jagged edges on a 3x phone. A CSS
+          drop-shadow composites at device resolution instead. The two steps
+          keep it proportional to the mark (dy 8.4 / blur 16.8 on a 1436-wide
+          viewBox, at the widths the mark actually renders). */}
       <h1 className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center">
         <span className="sr-only">
           Madbunny official store. Madbunny is a lifestyle brand symbolizing
@@ -82,7 +89,7 @@ function CampaignBanner() {
           alt=""
           width={1436}
           height={456}
-          className="w-4/5"
+          className="w-4/5 [filter:drop-shadow(0_2px_4px_rgba(0,0,0,0.4))] md:[filter:drop-shadow(0_4px_8px_rgba(0,0,0,0.4))]"
           loading="eager"
         />
       </h1>
