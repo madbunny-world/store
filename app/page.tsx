@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { getAllProducts } from "@/lib/shopify/queries";
 import { isFineArt, TAG } from "@/lib/catalog";
 import { toGridCards } from "@/lib/cards";
@@ -67,30 +68,32 @@ function CampaignBanner() {
       />
       {/* The wordmark IS the page title, so it carries the h1 — with the words
           as real text for crawlers and screen readers, and the artwork marked
-          decorative (Gia, 2026-08 — SEO; home had no h1 at all). The sticker
-          mark is a true vector (1436×456 viewBox) — the raster export was
-          visibly soft at banner width. Bottom-aligned, centered, at 80% of the
-          banner width (Gia, 2026-08).
+          decorative (Gia, 2026-08 — SEO; home had no h1 at all).
 
-          The drop shadow lives here, not in the SVG: an SVG <filter> makes
-          Safari rasterise the whole graphic at CSS resolution when it is loaded
-          through <img>, which read as jagged edges on a 3x phone. A CSS
-          drop-shadow composites at device resolution instead. The two steps
-          keep it proportional to the mark (dy 8.4 / blur 16.8 on a 1436-wide
-          viewBox, at the widths the mark actually renders). */}
+          A raster, not the SVG, and deliberately so: the mark's drop shadow is
+          a blur, and Safari renders ANY blur — an SVG <filter> or a CSS
+          drop-shadow — into an offscreen texture below device resolution. That
+          made the logo jagged one way and blurry the other. Baking the shadow
+          into pixels leaves nothing to rasterise. Exported at 2872px (2x the
+          artwork) from the original filtered SVG, so the shadow is the one
+          Figma drew.
+
+          next/image, so a phone downloads a ~640–1080px variant of this rather
+          than the full 2872. Bottom-aligned, centred, at 80% of the banner
+          width. */}
       <h1 className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center">
         <span className="sr-only">
           Madbunny official store. Madbunny is a lifestyle brand symbolizing
           &ldquo;crazy people who change the world&rdquo;.
         </span>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/media/madbunny-logo-sticker.svg"
+        <Image
+          src="/media/madbunny-logo-sticker.webp"
           alt=""
-          width={1436}
-          height={456}
-          className="w-4/5 [filter:drop-shadow(0_2px_4px_rgba(0,0,0,0.4))] md:[filter:drop-shadow(0_4px_8px_rgba(0,0,0,0.4))]"
-          loading="eager"
+          width={2872}
+          height={912}
+          sizes="80vw"
+          className="w-4/5"
+          priority
         />
       </h1>
     </div>
