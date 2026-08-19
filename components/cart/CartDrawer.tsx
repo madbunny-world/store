@@ -6,6 +6,7 @@ import Link from "next/link";
 import { X, Trash2 } from "lucide-react";
 import { useCart } from "./CartProvider";
 import { formatMoney } from "@/lib/money";
+import PaymentMethods from "./PaymentMethods";
 import type { UpsellItem } from "./CartUpsells";
 
 // Shopping bag, styled after the reference Gia supplied (2026-08): bold
@@ -154,30 +155,48 @@ export default function CartDrawer({ upsells = [] }: { upsells?: UpsellItem[] })
           )}
         </div>
 
-        {!empty && (
-          <>
-            <Upsells
-              items={suggestions}
-              onAdd={addItem}
-              onNavigate={close}
-              busy={isPending}
-            />
-            <div className={`px-5 pb-4 pt-5 ${LABEL}`}>
-              <p className="font-[350] leading-relaxed">
-                Taxes and shipping calculated at checkout.
-              </p>
-            </div>
-            {/* Full-bleed, welded to the bottom edge like the reference. The
-                total rides in the button, so there is no separate subtotal row.
-                py-[15.56px] makes the bar 50.9px tall (Gia, 2026-08). */}
-            <a
-              href={cart.checkoutUrl}
-              className={`flex items-center justify-center gap-3 bg-black py-[15.56px] text-center text-bunny-white transition-opacity hover:opacity-80 ${LABEL_LG}`}
-            >
-              <span>Checkout</span>
-              <span>{formatMoney(cart.cost.subtotalAmount)}</span>
-            </a>
-          </>
+        {/* Everything below the item list renders whether or not the bag has
+            anything in it (Gia, 2026-08). The rail matters MOST when the bag is
+            empty — it is the only route back into the catalogue from here — and
+            it needs no cart contents to work: the suggestions are in-stock
+            buyables minus whatever is already in the bag, which on an empty bag
+            is simply the first three. Upsells returns null by itself if the
+            catalogue has nothing to offer. */}
+        <Upsells
+          items={suggestions}
+          onAdd={addItem}
+          onNavigate={close}
+          busy={isPending}
+        />
+        <div className={`px-5 pb-3 pt-5 ${LABEL}`}>
+          <p className="font-[350] leading-relaxed">
+            Taxes and shipping calculated at checkout.
+          </p>
+        </div>
+        <PaymentMethods />
+        {/* Full-bleed, welded to the bottom edge like the reference. The total
+            rides in the button, so there is no separate subtotal row.
+            py-[15.56px] makes the bar 50.9px tall (Gia, 2026-08).
+
+            Empty renders a <span>, not a disabled <a>: an anchor has no
+            disabled state, so a greyed-out link would still be clickable and
+            still land on a Shopify checkout with nothing in it. Swapping the
+            element out is the only way the control is genuinely inert. */}
+        {empty ? (
+          <span
+            aria-disabled="true"
+            className={`flex cursor-not-allowed items-center justify-center gap-3 bg-[#B3B3B3] py-[15.56px] text-center text-bunny-white ${LABEL_LG}`}
+          >
+            <span>Checkout</span>
+          </span>
+        ) : (
+          <a
+            href={cart.checkoutUrl}
+            className={`flex items-center justify-center gap-3 bg-black py-[15.56px] text-center text-bunny-white transition-opacity hover:opacity-80 ${LABEL_LG}`}
+          >
+            <span>Checkout</span>
+            <span>{formatMoney(cart.cost.subtotalAmount)}</span>
+          </a>
         )}
       </aside>
     </>
